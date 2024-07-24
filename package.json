@@ -1,0 +1,19 @@
+{
+  "name": "com.hextecgames.advancedscripttemplates",
+  "version": "1.0.0",
+  "displayName": "AdvancedScriptTemplates",
+  "description": "Package that allows custom script templates, including automatically adding a namespace based on the folder the script was created in",
+  "unity": "2019.1",
+  "dependencies": {},
+  "author": {
+    "name": "HexTecGames"
+  },
+  "hideInEditor": "false",
+  "samples": [
+    {
+      "displayName": "Templates",
+      "description": "Collection of script templates",
+      "path": "Samples/Templates"
+    }
+  ]
+}
