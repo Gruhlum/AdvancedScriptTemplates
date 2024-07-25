@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d6f58ef435b9343a7c7a300828979d, type: 3}
   m_Name: Template Settings
   m_EditorClassIdentifier: 
+  templatePath: ..\..\_Misc\Packages\AdvancedScriptTemplates\Samples\Templates
   addNameSpace: 1
-  addDefaultNamespace: 1
+  addDefaultNameSpace: 1
   defaultNameSpaceType: 1
   customNameSpace: 
-  ignoreWords:
+  addFolderNameSpace: 0
+  ignoreFolders:
   - Assets
