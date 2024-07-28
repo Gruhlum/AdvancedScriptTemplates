@@ -57,10 +57,13 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
 
             int indexOfClassName = folderPath.LastIndexOf('/');
+            if (indexOfClassName == -1)
+            {
+                return GetDefaultNameSpace();             
+            }
+
             folderPath = folderPath.Remove(indexOfClassName, folderPath.Length - indexOfClassName);
-
             folderPath = folderPath.Replace('/', '.');
-
             string namespaceName = GetDefaultNameSpace();
             return string.Join('.', namespaceName, folderPath);
         }

@@ -15,8 +15,10 @@ MonoBehaviour:
   templatePath: ..\..\_Misc\Packages\AdvancedScriptTemplates\Samples\Templates
   addNameSpace: 1
   addDefaultNameSpace: 1
-  defaultNameSpaceType: 1
-  customNameSpace: 
-  addFolderNameSpace: 0
+  defaultNameSpaceType: 0
+  customNameSpace: HexTecGames
+  addFolderNameSpace: 1
   ignoreFolders:
   - Assets
+  - Scripts
+  - Game
