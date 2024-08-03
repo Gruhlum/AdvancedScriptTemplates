@@ -40,15 +40,25 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public List<string> ignoreFolders = new List<string>() { "Assets" };
 
+
+        private void Awake()
+        {
+            TryToSetTemplatePath();
+        }
+
         public string GenerateNamespaceName(string folderPath) // Assets/Test/IJohn.cs
         {
             if (!addFolderNameSpace)
             {
                 if (addDefaultNameSpace)
                 {
-                    Debug.Log("hi");
                     return GetDefaultNameSpace();
                 }
+            }
+
+            if (folderPath.Contains("Packages/com"))
+            {
+                return GetDefaultNameSpace();
             }
 
             foreach (var ignoreWord in ignoreFolders)
@@ -67,7 +77,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             string namespaceName = GetDefaultNameSpace();
             return string.Join('.', namespaceName, folderPath);
         }
-
         private string GetDefaultNameSpace()
         {
             string namespaceName = null;
@@ -82,12 +91,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             return namespaceName;
         }
-
-        private void Awake()
-        {
-            TryToSetTemplatePath();
-        }
-
         private void TryToSetTemplatePath()
         {
             if (!string.IsNullOrEmpty(templatePath))
