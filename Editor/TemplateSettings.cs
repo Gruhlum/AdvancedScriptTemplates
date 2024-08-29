@@ -1,4 +1,5 @@
 using HexTecGames.Basics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -73,7 +74,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
 
             folderPath = folderPath.Remove(indexOfClassName, folderPath.Length - indexOfClassName);
-            folderPath = folderPath.Replace('/', '.');
+            folderPath = folderPath.Replace('/', '.').Replace(" ", string.Empty);
             string namespaceName = GetDefaultNameSpace();
             return string.Join('.', namespaceName, folderPath);
         }
@@ -84,9 +85,9 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             {
                 if (defaultNameSpaceType == DefaultNameSpaceType.custom)
                 {
-                    namespaceName = customNameSpace;
+                    namespaceName = customNameSpace.Replace(" ", string.Empty);
                 }
-                else namespaceName = Application.companyName;
+                else namespaceName = Application.companyName.Replace(" ", string.Empty);
             }
 
             return namespaceName;
