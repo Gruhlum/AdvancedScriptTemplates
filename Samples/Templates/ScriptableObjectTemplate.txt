@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 #NAMESPACE#
-[CreateAssetMenu(menuName = "#COMPANYNAME#/#PROJECTNAME#/#SCRIPTNAME#")]
+[CreateAssetMenu(menuName = "#SCRIPTABLEOBJECTNAME#/#PROJECTNAME#/#SCRIPTNAME#")]
 public class #SCRIPTNAME# : ScriptableObject
 {
     

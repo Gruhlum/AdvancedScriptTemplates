@@ -119,6 +119,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             text = text.Replace("#SCRIPTNAME#", nameOfScript);
             text = text.Replace("#SCRIPTNAMEWITHOUTEDITOR#", nameOfScript.Replace("Editor", string.Empty));
+            text = text.Replace("#SCRIPTABLEOBJECTNAME#", TemplateSettings.Instance.GetScriptableObjectName());
             text = text.Replace("#COMPANYNAME#", Application.companyName);
             text = text.Replace("#PROJECTNAME#", Application.productName);
             text = text.Replace("#BRACKETOPEN#", "{");

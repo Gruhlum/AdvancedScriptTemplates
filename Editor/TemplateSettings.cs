@@ -37,6 +37,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         public bool addDefaultNameSpace = true;
         public DefaultNameSpaceType defaultNameSpaceType = DefaultNameSpaceType.companyName;
         public string customNameSpace;
+        public DefaultNameSpaceType defaultNameSO = DefaultNameSpaceType.companyName;
+        [Tooltip("The first sub-menu for creating the SO")] public string customScriptableObjectName;
         public bool addFolderNameSpace = true;
 
         public List<string> ignoreFolders = new List<string>() { "Assets" };
@@ -70,7 +72,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             int indexOfClassName = folderPath.LastIndexOf('/');
             if (indexOfClassName == -1)
             {
-                return GetDefaultNameSpace();             
+                return GetDefaultNameSpace();
             }
 
             folderPath = folderPath.Remove(indexOfClassName, folderPath.Length - indexOfClassName);
@@ -89,8 +91,15 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 }
                 else namespaceName = Application.companyName.Replace(" ", string.Empty);
             }
-
             return namespaceName;
+        }
+        public string GetScriptableObjectName()
+        {
+            if (defaultNameSO == DefaultNameSpaceType.companyName)
+            {
+                return Application.companyName;
+            }
+            else return customScriptableObjectName;
         }
         private void TryToSetTemplatePath()
         {
