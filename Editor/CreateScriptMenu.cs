@@ -18,32 +18,32 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
         }
 
-        [MenuItem("Assets/Create/MonoBehaviour", priority = 1)]
+        [MenuItem("Assets/Create/MonoBehaviour", priority = 2)]
         static void CreateMonoBehaviourMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "MonoBehaviourTemplate.txt");
             CreateTemplate(pathToTemplate, "MonoBehaviour");
         }
-        [MenuItem("Assets/Create/ScriptableObject", priority = 2)]
+        [MenuItem("Assets/Create/ScriptableObject", priority = 3)]
         static void CreateScriptableObjectMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "ScriptableObjectTemplate.txt");
             CreateTemplate(pathToTemplate, "ScriptableObject");
         }
-        [MenuItem("Assets/Create/SerializedClass", priority = 3)]
+        [MenuItem("Assets/Create/SerializedClass", priority = 4)]
         static void CreateSerializedClassMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "SerializedClassTemplate.txt");
             CreateTemplate(pathToTemplate, "SerializedClass");
         }
-        [MenuItem("Assets/Create/Interface", priority = 4)]
+        [MenuItem("Assets/Create/Interface", priority = 5)]
         static void CreateInterfaceMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "InterfaceTemplate.txt");
 
             CreateTemplate(pathToTemplate, "IInterface");
         }
-        [MenuItem("Assets/Create/Editor", priority = 5)]
+        [MenuItem("Assets/Create/Editor", priority = 6)]
         static void CreateEditorMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "EditorTemplate.txt");

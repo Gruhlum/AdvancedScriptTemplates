@@ -17,6 +17,8 @@ MonoBehaviour:
   addDefaultNameSpace: 1
   defaultNameSpaceType: 0
   customNameSpace: HexTecGames
+  defaultNameSO: 0
+  customScriptableObjectName: HexTecGames
   addFolderNameSpace: 1
   ignoreFolders:
   - Assets
