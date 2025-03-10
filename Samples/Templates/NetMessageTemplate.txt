@@ -1,0 +1,48 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Networking.Transport;
+using UnityEngine;
+
+#NAMESPACE#
+public class #SCRIPTNAME# : NetMessage
+{
+    public static event Action<#SCRIPTNAME#> OnClientRecieved;
+    public static event Action<#SCRIPTNAME#, NetworkConnection> OnServerRecieved;
+
+     public override OpCode Code
+     {
+         get
+         {
+             return OpCode.None;
+         }
+     }
+public #SCRIPTNAME#()
+{
+
+}
+
+public #SCRIPTNAME#(DataStreamReader reader) : base(reader)
+{
+}
+protected override void SerializeData(ref DataStreamWriter writer)
+{
+    
+}
+public override void Deserialize(DataStreamReader reader)
+{
+    
+}
+
+public override void RecievedOnClient()
+{
+    OnClientRecieved?.Invoke(this);
+}
+
+public override void RecievedOnServer(Server server, NetworkConnection cnn)
+{
+    server.Broadcast(this, cnn);
+    OnServerRecieved?.Invoke(this, cnn);
+}
+}

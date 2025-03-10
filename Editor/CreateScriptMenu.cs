@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
@@ -10,11 +9,11 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
     public static class CreateScriptMenu
     {
-        private static string TemplateFolder
+        private  static string TemplateFolder
         {
             get
             {
-                return TemplateSettings.Instance.templatePath;
+                return TemplateSettings.instance.templatePath;
             }
         }
 
@@ -40,17 +39,22 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         static void CreateInterfaceMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "InterfaceTemplate.txt");
-
             CreateTemplate(pathToTemplate, "IInterface");
         }
         [MenuItem("Assets/Create/Editor", priority = 6)]
         static void CreateEditorMenuItem()
         {
             string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "EditorTemplate.txt");
-
             CreateTemplate(pathToTemplate, "SomeEditor");
         }
-
+#if UNITY_TRANSPORT
+        [MenuItem("Assets/Create/NetMsg", priority = 7)]
+        static void CreateNetMessageMenuItem()
+        {
+            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "NetMessageTemplate.txt");
+            CreateTemplate(pathToTemplate, "SomeNetMessage");
+        }
+#endif
         private static string GetFolder()
         {
             Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
@@ -99,7 +103,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             string text = File.ReadAllText(templatePath);
 
-            if (TemplateSettings.Instance.addNameSpace)
+            if (TemplateSettings.instance.addNameSpace)
             {
                 int spaceIndex = text.IndexOf("#NAMESPACE#");
                 text = text.Insert(spaceIndex + "#NAMESPACE#".Length, System.Environment.NewLine + "{");
@@ -111,22 +115,20 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
                 text = text.Remove(firstBracketIndex);
                 text = text.Insert(firstBracketIndex, classText);
-
-                text = text.Replace("#NAMESPACE#", "namespace " + TemplateSettings.Instance.GenerateNamespaceName(pathName));
+                text = text.Replace("#NAMESPACE#", "namespace " + TemplateSettings.instance.GenerateNamespaceName(pathName));
                 text = text.Insert(text.Length, System.Environment.NewLine + "}");
             }
             else text = text.Replace("#NAMESPACE#", string.Empty);
 
             text = text.Replace("#SCRIPTNAME#", nameOfScript);
             text = text.Replace("#SCRIPTNAMEWITHOUTEDITOR#", nameOfScript.Replace("Editor", string.Empty));
-            text = text.Replace("#SCRIPTABLEOBJECTNAME#", TemplateSettings.Instance.GetScriptableObjectName());
+            text = text.Replace("#SCRIPTABLEOBJECTNAME#", TemplateSettings.instance.GetScriptableObjectName());
             text = text.Replace("#COMPANYNAME#", Application.companyName);
             text = text.Replace("#PROJECTNAME#", Application.productName);
             text = text.Replace("#BRACKETOPEN#", "{");
             text = text.Replace("#BRACKETCLOSE#", "}");
             text = text.Replace("#NAMESPACE#", "namespace");
-            text = text.Replace("#NAMESPACENAME#", TemplateSettings.Instance.GenerateNamespaceName(pathName));
-
+            text = text.Replace("#NAMESPACENAME#", TemplateSettings.instance.GenerateNamespaceName(pathName));
             File.WriteAllText(pathName, text);
         }
     }

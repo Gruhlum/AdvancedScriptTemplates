@@ -3,30 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
-    //[CreateAssetMenu(menuName = "HexTecGames/PackageTest/TemplateSettings")]
-    public class TemplateSettings : ScriptableObject
+    [FilePath("ProjectSettings/AdvancedScriptTemplatesSettings.asset", FilePathAttribute.Location.ProjectFolder)]
+    public class TemplateSettings : ScriptableSingleton<TemplateSettings>
     {
-        private static TemplateSettings s_Instance;
-
-        public static TemplateSettings Instance
-        {
-            get
-            {
-                if (s_Instance == null)
-                {
-                    s_Instance = Resources.Load<TemplateSettings>("Template Settings");
-                }
-
-                return s_Instance;
-            }
-        }
-
         public enum DefaultNameSpaceType { custom, companyName }
 
         [TextArea]
@@ -35,18 +21,32 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         [Header("Namespace Settings")]
         public bool addNameSpace = true;
         public bool addDefaultNameSpace = true;
+        [Space]
         public DefaultNameSpaceType defaultNameSpaceType = DefaultNameSpaceType.companyName;
+        [DrawIf(nameof(defaultNameSpaceType), DefaultNameSpaceType.custom)]
         public string customNameSpace;
+
         public DefaultNameSpaceType defaultNameSO = DefaultNameSpaceType.companyName;
+        [DrawIf(nameof(defaultNameSO), DefaultNameSpaceType.custom)]
         [Tooltip("The first sub-menu for creating the SO")] public string customScriptableObjectName;
+
         public bool addFolderNameSpace = true;
 
-        public List<string> ignoreFolders = new List<string>() { "Assets" };
+        [TextArea] public string ignoreFolders = "Assets, Scripts, Game, Test, com.package";
 
+
+        [SerializeField] public List<string> selectedPaths = new List<string>();
 
         private void Awake()
         {
-            TryToSetTemplatePath();
+            SetTemplatePath();
+        }
+
+        private List<string> GenerateIgnoredFolders()
+        {
+            string result = ignoreFolders;
+            result = result.RemoveSpaces();
+            return result.Split(",").ToList();
         }
 
         public string GenerateNamespaceName(string folderPath) // Assets/Test/IJohn.cs
@@ -58,13 +58,34 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                     return GetDefaultNameSpace();
                 }
             }
+            List<string> removeWords = new List<string>();
+
+            foreach (var selectedPath in selectedPaths)
+            {
+                Debug.Log(folderPath + " - " + selectedPath);
+                if (folderPath.Contains(selectedPath))
+                {
+                    //Selected: Assets/Scripts/Tier1/Tier2
+                    //Path:      /Scripts
+                    DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
+                    Debug.Log(directoryInfo.Name);
+                    removeWords.Add("/" + directoryInfo.Name);
+                }
+            }
+
+            foreach (var word in removeWords)
+            {
+                folderPath = folderPath.Replace(word, string.Empty);
+            }
 
             if (folderPath.Contains("Packages/com"))
             {
                 return GetDefaultNameSpace();
             }
 
-            foreach (var ignoreWord in ignoreFolders)
+            folderPath = folderPath.RemoveSpaces();
+
+            foreach (var ignoreWord in GenerateIgnoredFolders())
             {
                 folderPath = folderPath.Replace($"{ignoreWord}/", string.Empty);
             }
@@ -75,8 +96,12 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 return GetDefaultNameSpace();
             }
 
+            Debug.Log(selectedPaths.Count + " - " + folderPath);
+
+
+
             folderPath = folderPath.Remove(indexOfClassName, folderPath.Length - indexOfClassName);
-            folderPath = folderPath.Replace('/', '.').Replace(" ", string.Empty);
+            folderPath = folderPath.Replace('/', '.');
             string namespaceName = GetDefaultNameSpace();
             return string.Join('.', namespaceName, folderPath);
         }
@@ -101,18 +126,37 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             else return customScriptableObjectName;
         }
-        private void TryToSetTemplatePath()
+
+        public void TogglePath(string path)
+        {
+            if (selectedPaths.Contains(path))
+            {
+                selectedPaths.Remove(path);
+            }
+            else selectedPaths.Add(path);
+        }
+
+        private void CreateDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+
+        private void SetTemplatePath()
         {
             if (!string.IsNullOrEmpty(templatePath))
             {
                 return;
             }
-
-            string path = AssetDatabase.GetAssetPath(this);
-
-            path = Directory.GetParent(path).Parent.FullName;
-            path = Path.GetRelativePath("Assets", path);
-            templatePath = path;
+            string dirPath = Path.Combine(Application.dataPath, "Plugins", "ScriptTemplates");
+            CreateDirectory(dirPath);
+            templatePath = dirPath;
+        }
+        public void Save()
+        {
+            Save(true);
         }
     }
 }

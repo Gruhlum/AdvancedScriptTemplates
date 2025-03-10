@@ -8,16 +8,16 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
     public class SettingsWindow : EditorWindow
     {
-        [SerializeField] private TemplateSettings settings = default;
-        [MenuItem("Tools/Settings/Advanced ScriptTemplates")]
+        [MenuItem("Tools/AdvancedScriptTemplates/Settings")]
         public static void ShowWindow()
         {
             GetWindow(typeof(SettingsWindow));
         }
         private void OnGUI()
         {
-            UnityEditor.Editor m_MyScriptableObjectEditor = UnityEditor.Editor.CreateEditor(settings);
+            UnityEditor.Editor m_MyScriptableObjectEditor = UnityEditor.Editor.CreateEditor(TemplateSettings.instance);
             m_MyScriptableObjectEditor.OnInspectorGUI();
+            TemplateSettings.instance.Save();
         }
     }
 }
