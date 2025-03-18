@@ -134,6 +134,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 selectedPaths.Remove(path);
             }
             else selectedPaths.Add(path);
+
+            Save();
         }
 
         private void CreateDirectory(string path)
