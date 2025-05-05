@@ -1,0 +1,10 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using HexTecGames.Basics.UI;
+using UnityEngine;
+
+#NAMESPACE#
+public class #SCRIPTNAME# : DisplayController<#SCRIPTNAMEWITHOUTCONTROLLER#, #SCRIPTNAMEWITHOUTDISPLAYANDCONTROLLER#>
+{
+    
+}

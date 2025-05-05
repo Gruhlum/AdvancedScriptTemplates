@@ -10,14 +10,13 @@ using Random = UnityEngine.Random;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
-    [FilePath("ProjectSettings/AdvancedScriptTemplatesSettings.asset", FilePathAttribute.Location.ProjectFolder)]
+    [FilePath("Assets/Plugins/AdvancedScriptTemplates/Settings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class TemplateSettings : ScriptableSingleton<TemplateSettings>
     {
         public enum DefaultNameSpaceType { custom, companyName }
-
-        [TextArea]
-        public string templatePath;
-
+        public List<ScriptTemplateData> scriptTemplateDatas;
+        public List<KeywordReplacement> keywordReplacements;
+        public KeywordReplacement replacement;
         [Header("Namespace Settings")]
         public bool addNameSpace = true;
         public bool addDefaultNameSpace = true;
@@ -37,10 +36,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         [SerializeField] public List<string> selectedPaths = new List<string>();
 
-        private void Awake()
-        {
-            SetTemplatePath();
-        }
 
         private List<string> GenerateIgnoredFolders()
         {
@@ -138,26 +133,13 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             Save();
         }
 
-        private void CreateDirectory(string path)
+        public void Save()
         {
-            if (!Directory.Exists(path))
+            string path = Path.Combine(Application.dataPath, "Plugins", "AdvancedScriptTemplates");
+            if (Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-        }
-
-        private void SetTemplatePath()
-        {
-            if (!string.IsNullOrEmpty(templatePath))
-            {
-                return;
-            }
-            string dirPath = Path.Combine(Application.dataPath, "Plugins", "ScriptTemplates");
-            CreateDirectory(dirPath);
-            templatePath = dirPath;
-        }
-        public void Save()
-        {
             Save(true);
         }
     }

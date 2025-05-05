@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 return;
             }
             TemplateSettings.instance.TogglePath(path);
+            EditorApplication.RepaintProjectWindow();
         }
         static void DrawFolderIcon(string guid, Rect rect)
         {
@@ -64,9 +66,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             if (texture == null)
             {
-                texture = Resources.Load<Texture>("Folder_Orange");
+                texture = Resources.Load<Texture>("Folder_Normal");
             }
-
             GUI.DrawTexture(imageRect, texture);
         }
     }

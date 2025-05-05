@@ -3,58 +3,86 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
     public static class CreateScriptMenu
     {
-        private  static string TemplateFolder
+        [InitializeOnLoadMethod]
+        private static void Init()
         {
-            get
+            EditorApplication.delayCall += CreateMenus;
+        }
+
+        private static void CreateMenus()
+        {
+            foreach (var scriptTemplateData in TemplateSettings.instance.scriptTemplateDatas)
             {
-                return TemplateSettings.instance.templatePath;
+                scriptTemplateData.VerifyMenu();
             }
         }
 
-        [MenuItem("Assets/Create/MonoBehaviour", priority = 2)]
-        static void CreateMonoBehaviourMenuItem()
+
+        [Shortcut("Script1", KeyCode.Alpha1, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
+        public static void GenerateScript1()
         {
-            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "MonoBehaviourTemplate.txt");
-            CreateTemplate(pathToTemplate, "MonoBehaviour");
+            if (TemplateSettings.instance.scriptTemplateDatas.Count > 0)
+            {
+                CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[0]);
+            } 
         }
-        [MenuItem("Assets/Create/ScriptableObject", priority = 3)]
-        static void CreateScriptableObjectMenuItem()
+        [Shortcut("Script2", KeyCode.Alpha2, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
+        public static void GenerateScript2()
         {
-            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "ScriptableObjectTemplate.txt");
-            CreateTemplate(pathToTemplate, "ScriptableObject");
+            if (TemplateSettings.instance.scriptTemplateDatas.Count > 1)
+            {
+                CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[1]);
+            }
         }
-        [MenuItem("Assets/Create/SerializedClass", priority = 4)]
-        static void CreateSerializedClassMenuItem()
+        [Shortcut("Script3", KeyCode.Alpha3, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
+        public static void GenerateScript3()
         {
-            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "SerializedClassTemplate.txt");
-            CreateTemplate(pathToTemplate, "SerializedClass");
+            if (TemplateSettings.instance.scriptTemplateDatas.Count > 2)
+            {
+                CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[2]);
+            }
         }
-        [MenuItem("Assets/Create/Interface", priority = 5)]
-        static void CreateInterfaceMenuItem()
+        [Shortcut("Script4", KeyCode.Alpha4, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
+        public static void GenerateScript4()
         {
-            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "InterfaceTemplate.txt");
-            CreateTemplate(pathToTemplate, "IInterface");
+            if (TemplateSettings.instance.scriptTemplateDatas.Count > 3)
+            {
+                CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[3]);
+            }
         }
-        [MenuItem("Assets/Create/Editor", priority = 6)]
-        static void CreateEditorMenuItem()
+        [Shortcut("Script5", KeyCode.Alpha5, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
+        public static void GenerateScript5()
         {
-            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "EditorTemplate.txt");
-            CreateTemplate(pathToTemplate, "SomeEditor");
+            if (TemplateSettings.instance.scriptTemplateDatas.Count > 4)
+            {
+                CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[4]);
+            }
         }
-#if UNITY_TRANSPORT
-        [MenuItem("Assets/Create/NetMsg", priority = 7)]
-        static void CreateNetMessageMenuItem()
+        [Shortcut("Script6", KeyCode.Alpha6, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
+        public static void GenerateScript6()
         {
-            string pathToTemplate = Path.Combine(Application.dataPath, TemplateFolder, "NetMessageTemplate.txt");
-            CreateTemplate(pathToTemplate, "SomeNetMessage");
+            if (TemplateSettings.instance.scriptTemplateDatas.Count > 5)
+            {
+                CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[5]);
+            }
         }
-#endif
+
+        public static void CreateTemplate(ScriptTemplateData data)
+        {
+            CreateScriptEndNameEditAction create = ScriptableObject.CreateInstance<CreateScriptEndNameEditAction>();
+            create.template = data.template;
+            create.data = data;
+            string newPath = Path.Combine(GetFolder(), data.newFileName + ".cs");
+            Texture2D icon = EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D;
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, create, newPath, icon, null);
+        }
         private static string GetFolder()
         {
             Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
@@ -73,35 +101,42 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             return "Assets";
         }
-
-        static void CreateTemplate(string templatePath, string defaultName)
-        {
-            CreateScriptEndNameEditAction create = ScriptableObject.CreateInstance<CreateScriptEndNameEditAction>();
-            create.templatePath = templatePath;
-            string newPath = Path.Combine(GetFolder(), defaultName + ".cs");
-            Texture2D icon = EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D;
-            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, create, newPath, icon, null);
-        }
     }
 
     internal class CreateScriptEndNameEditAction : EndNameEditAction
     {
-        public string templatePath;
+        public TextAsset template;
+        public ScriptTemplateData data;
 
         public override void Action(int instanceId, string pathName, string resourceFile)
         {
-            ReplacePlaceholders(pathName);
+            string templateText = ReplacePlaceholders(pathName, template);
+            File.WriteAllText(pathName, templateText);
+            if (data.otherItems != null && data.otherItems.Count > 0)
+            {
+                FileInfo fileInfo = new FileInfo(pathName);
+                string nameOfScript = Path.GetFileNameWithoutExtension(fileInfo.Name);
+
+                foreach (var otherData in data.otherItems)
+                {
+                    string otherPathName = pathName.Replace(nameOfScript, nameOfScript + otherData.suffix);
+                    Debug.Log(otherPathName);
+                    templateText = ReplacePlaceholders(otherPathName, otherData.template);
+                    File.WriteAllText(otherPathName, templateText);
+                    AssetDatabase.LoadAssetAtPath<Object>(otherPathName);
+                }
+            }
             AssetDatabase.Refresh();
             Object obj = AssetDatabase.LoadAssetAtPath<Object>(pathName);
-            Selection.SetActiveObjectWithContext(obj, obj);
+            Selection.SetActiveObjectWithContext(obj, obj);  
         }
 
-        private void ReplacePlaceholders(string pathName)
+        private string ReplacePlaceholders(string pathName, TextAsset template)
         {
             FileInfo fileInfo = new FileInfo(pathName);
             string nameOfScript = Path.GetFileNameWithoutExtension(fileInfo.Name);
 
-            string text = File.ReadAllText(templatePath);
+            string text = template.text;
 
             if (TemplateSettings.instance.addNameSpace)
             {
@@ -122,14 +157,16 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             text = text.Replace("#SCRIPTNAME#", nameOfScript);
             text = text.Replace("#SCRIPTNAMEWITHOUTEDITOR#", nameOfScript.Replace("Editor", string.Empty));
+            text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAY#", nameOfScript.Replace("Display", string.Empty));
+            text = text.Replace("#SCRIPTNAMEWITHOUTCONTROLLER#", nameOfScript.Replace("Controller", string.Empty));
+            text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAYANDCONTROLLER#", nameOfScript.Replace("Controller", string.Empty).Replace("Display", string.Empty));
+            text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAYLOWER#", nameOfScript.Replace("Display", string.Empty).ToLowerInvariant());
             text = text.Replace("#SCRIPTABLEOBJECTNAME#", TemplateSettings.instance.GetScriptableObjectName());
             text = text.Replace("#COMPANYNAME#", Application.companyName);
             text = text.Replace("#PROJECTNAME#", Application.productName);
-            text = text.Replace("#BRACKETOPEN#", "{");
-            text = text.Replace("#BRACKETCLOSE#", "}");
             text = text.Replace("#NAMESPACE#", "namespace");
             text = text.Replace("#NAMESPACENAME#", TemplateSettings.instance.GenerateNamespaceName(pathName));
-            File.WriteAllText(pathName, text);
+            return text;
         }
     }
 }

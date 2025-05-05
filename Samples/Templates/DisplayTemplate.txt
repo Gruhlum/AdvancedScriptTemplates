@@ -1,0 +1,15 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using HexTecGames.Basics.UI;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+#NAMESPACE#
+public class #SCRIPTNAME# : Display<#SCRIPTNAME#, #SCRIPTNAMEWITHOUTDISPLAY#>
+{
+    protected override void DrawItem(#SCRIPTNAMEWITHOUTDISPLAY# #SCRIPTNAMEWITHOUTDISPLAYLOWER#)
+    {
+        throw new System.NotImplementedException();
+    }
+}

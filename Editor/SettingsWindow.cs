@@ -17,6 +17,9 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         {
             UnityEditor.Editor m_MyScriptableObjectEditor = UnityEditor.Editor.CreateEditor(TemplateSettings.instance);
             m_MyScriptableObjectEditor.OnInspectorGUI();
+        }
+        private void OnDestroy()
+        {
             TemplateSettings.instance.Save();
         }
     }

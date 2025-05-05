@@ -5,7 +5,7 @@ using UnityEditor;
 
 #NAMESPACE#
 [CustomEditor(typeof(#SCRIPTNAMEWITHOUTEDITOR#))]
-public class #SCRIPTNAME# : UnityEditor.Editor
+public class #SCRIPTNAME# : Editor
 {
 	public override void OnInspectorGUI()
 	{
