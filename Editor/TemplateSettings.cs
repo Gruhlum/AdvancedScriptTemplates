@@ -16,7 +16,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         public enum DefaultNameSpaceType { custom, companyName }
         public List<ScriptTemplateData> scriptTemplateDatas;
         public List<KeywordReplacement> keywordReplacements;
-        public KeywordReplacement replacement;
+        //public KeywordReplacement replacement;
         [Header("Namespace Settings")]
         public bool addNameSpace = true;
         public bool addDefaultNameSpace = true;
@@ -140,7 +140,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             {
                 Directory.CreateDirectory(path);
             }
-            Save(true);
+            Save(false);
         }
     }
 }
