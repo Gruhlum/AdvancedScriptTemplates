@@ -8,6 +8,13 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
     public class SettingsWindow : EditorWindow
     {
+        private UnityEditor.Editor editor;
+
+        private void OnEnable()
+        {
+            editor = UnityEditor.Editor.CreateEditor(TemplateSettings.instance);
+        }
+
         [MenuItem("Tools/AdvancedScriptTemplates/Settings")]
         public static void ShowWindow()
         {
@@ -15,8 +22,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         }
         private void OnGUI()
         {
-            UnityEditor.Editor m_MyScriptableObjectEditor = UnityEditor.Editor.CreateEditor(TemplateSettings.instance);
-            m_MyScriptableObjectEditor.OnInspectorGUI();
+            editor.OnInspectorGUI();
         }
         private void OnDestroy()
         {

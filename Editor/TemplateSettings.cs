@@ -34,7 +34,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         [TextArea] public string ignoreFolders = "Assets, Scripts, Game, Test, com.package";
 
 
-        [SerializeField] public List<string> selectedPaths = new List<string>();
+        public List<string> selectedPaths = new List<string>();
 
 
         private List<string> GenerateIgnoredFolders()
