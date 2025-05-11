@@ -29,6 +29,12 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             TemplateSettings.instance.TogglePath(path);
             EditorApplication.RepaintProjectWindow();
         }
+        [MenuItem("Tools/AdvancedScriptTemplates/Remove unused Folders")]
+        public static void RemoveUnusedFolderPaths()
+        {
+            TemplateSettings.instance.RemoveUnusedPaths();
+        }
+
         static void DrawFolderIcon(string guid, Rect rect)
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
@@ -70,5 +76,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             GUI.DrawTexture(imageRect, texture);
         }
+
     }
 }

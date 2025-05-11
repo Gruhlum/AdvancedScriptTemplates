@@ -64,13 +64,13 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                     //Path:      /Scripts
                     DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
                     Debug.Log(directoryInfo.Name);
-                    removeWords.Add("/" + directoryInfo.Name);
+                    removeWords.Add("/" + directoryInfo.Name + "/");
                 }
             }
 
             foreach (var word in removeWords)
             {
-                folderPath = folderPath.Replace(word, string.Empty);
+                folderPath = folderPath.Replace(word, "/");
             }
 
             if (folderPath.Contains("Packages/com"))
@@ -131,6 +131,19 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             else selectedPaths.Add(path);
 
             Save();
+        }
+
+        public void RemoveUnusedPaths()
+        {
+            for (int i = selectedPaths.Count - 1; i >= 0; i--)
+            {
+                var path = selectedPaths[i];
+                if (!AssetDatabase.IsValidFolder(path))
+                {
+                    selectedPaths.RemoveAt(i);
+                    Debug.Log($"Removing {path}");
+                }
+            }
         }
 
         public void Save()
