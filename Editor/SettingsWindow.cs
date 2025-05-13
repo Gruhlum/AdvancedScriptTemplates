@@ -15,7 +15,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             editor = UnityEditor.Editor.CreateEditor(TemplateSettings.instance);
         }
 
-        [MenuItem("Tools/AdvancedScriptTemplates/Settings")]
+        [MenuItem("Tools/AdvancedScriptTemplates/Settings", priority = 0)]
         public static void ShowWindow()
         {
             GetWindow(typeof(SettingsWindow));

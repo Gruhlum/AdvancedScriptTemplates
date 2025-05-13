@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 using Random = UnityEngine.Random;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
@@ -44,6 +46,14 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             return result.Split(",").ToList();
         }
 
+
+        private string GetPackageName(string folderPath)
+        {
+            int startIndex = folderPath.IndexOf("com.");
+            int firstSlash = folderPath.Substring(startIndex).IndexOf('/');
+            return folderPath.Substring(startIndex, firstSlash);
+        }
+
         public string GenerateNamespaceName(string folderPath) // Assets/Test/IJohn.cs
         {
             if (!addFolderNameSpace)
@@ -57,10 +67,10 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             foreach (var selectedPath in selectedPaths)
             {
-                Debug.Log(folderPath + " - " + selectedPath);
                 if (folderPath.Contains(selectedPath))
                 {
-                    //Selected: Assets/Scripts/Tier1/Tier2
+                    //Package Selected: /com.hextecgames.advancedscripttemplates/Editor
+                    //Normal Selected: Assets/Scripts/Tier1/Tier2
                     //Path:      /Scripts
                     DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
                     Debug.Log(directoryInfo.Name);
@@ -75,7 +85,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             if (folderPath.Contains("Packages/com"))
             {
-                return GetDefaultNameSpace();
+                return GetPackageNameSpace(folderPath);
             }
 
             folderPath = folderPath.RemoveSpaces();
@@ -85,21 +95,46 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 folderPath = folderPath.Replace($"{ignoreWord}/", string.Empty);
             }
 
-            int indexOfClassName = folderPath.LastIndexOf('/');
+            return TurnPathIntoNamespace(folderPath);
+        }
+
+        private string GetPackageNameSpace(string folderPath)
+        {
+            // Packages/com.unity.toolchain.win-x86_64-linux-x86_64
+            string packageName = GetPackageName(folderPath);
+            Debug.Log(packageName);
+            var packages = PackageInfo.GetAllRegisteredPackages();
+            string packageDisplayName = packageName;
+            foreach (var package in packages)
+            {
+                //Debug.Log(package.name);
+                if (package.name == packageName)
+                {
+                    packageDisplayName = package.displayName;
+                    break;
+                }
+            }
+
+            string cleanPath = folderPath; // Packages/com.unity.toolchain.win-x86_64-linux-x86_64/Editor/TestSc.cs
+            cleanPath = cleanPath.Replace("Packages/", string.Empty); // com.unity.toolchain.win-x86_64-linux-x86_64/Editor/TestSc.cs
+            cleanPath = cleanPath.Replace(packageName, packageDisplayName);
+            return TurnPathIntoNamespace(cleanPath);
+        }
+
+        private string TurnPathIntoNamespace(string path)
+        {
+            int indexOfClassName = path.LastIndexOf('/');
             if (indexOfClassName == -1)
             {
                 return GetDefaultNameSpace();
             }
 
-            Debug.Log(selectedPaths.Count + " - " + folderPath);
-
-
-
-            folderPath = folderPath.Remove(indexOfClassName, folderPath.Length - indexOfClassName);
-            folderPath = folderPath.Replace('/', '.');
+            path = path.Remove(indexOfClassName, path.Length - indexOfClassName);
+            path = path.Replace('/', '.');
             string namespaceName = GetDefaultNameSpace();
-            return string.Join('.', namespaceName, folderPath);
+            return string.Join('.', namespaceName, path);
         }
+
         private string GetDefaultNameSpace()
         {
             string namespaceName = null;

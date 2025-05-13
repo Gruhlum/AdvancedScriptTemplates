@@ -138,6 +138,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             string text = template.text;
 
+            string nameSpace = TemplateSettings.instance.GenerateNamespaceName(pathName);
+
             if (TemplateSettings.instance.addNameSpace)
             {
                 int spaceIndex = text.IndexOf("#NAMESPACE#");
@@ -150,7 +152,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
                 text = text.Remove(firstBracketIndex);
                 text = text.Insert(firstBracketIndex, classText);
-                text = text.Replace("#NAMESPACE#", "namespace " + TemplateSettings.instance.GenerateNamespaceName(pathName));
+                text = text.Replace("#NAMESPACE#", "namespace " + nameSpace);
                 text = text.Insert(text.Length, System.Environment.NewLine + "}");
             }
             else text = text.Replace("#NAMESPACE#", string.Empty);
@@ -165,7 +167,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             text = text.Replace("#COMPANYNAME#", Application.companyName);
             text = text.Replace("#PROJECTNAME#", Application.productName);
             text = text.Replace("#NAMESPACE#", "namespace");
-            text = text.Replace("#NAMESPACENAME#", TemplateSettings.instance.GenerateNamespaceName(pathName));
+            text = text.Replace("#NAMESPACENAME#", nameSpace);
             return text;
         }
     }
