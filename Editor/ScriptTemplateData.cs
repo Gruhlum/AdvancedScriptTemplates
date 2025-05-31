@@ -48,6 +48,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             // Menu is removed but should be added
             if (!menuExist && menuShouldExist)
             {
+                // Shortcut doesn't work!
                 _Menu.AddMenuItem(path, shortcut, false, priority, MenuClicked, () => true);
                 //var results = ShortcutManager.instance.GetAvailableShortcutIds();
                 //Debug.Log(string.Join(", ", results));

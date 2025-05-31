@@ -5,10 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
-using Random = UnityEngine.Random;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
@@ -33,10 +31,9 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public bool addFolderNameSpace = true;
 
-        [TextArea] public string ignoreFolders = "Assets, Scripts, Game, Test, com.package";
+        [TextArea] public string ignoreFolders = "Assets, Scripts, Game, Test, Runtime";
 
-
-        public List<string> selectedPaths = new List<string>();
+        public List<string> selectedPaths;
 
 
         private List<string> GenerateIgnoredFolders()
@@ -65,16 +62,19 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             List<string> removeWords = new List<string>();
 
-            foreach (var selectedPath in selectedPaths)
+            if (selectedPaths != null)
             {
-                if (folderPath.Contains(selectedPath))
+                foreach (var selectedPath in selectedPaths)
                 {
-                    //Package Selected: /com.hextecgames.advancedscripttemplates/Editor
-                    //Normal Selected: Assets/Scripts/Tier1/Tier2
-                    //Path:      /Scripts
-                    DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
-                    Debug.Log(directoryInfo.Name);
-                    removeWords.Add("/" + directoryInfo.Name + "/");
+                    if (folderPath.Contains(selectedPath))
+                    {
+                        //Package Selected: /com.hextecgames.advancedscripttemplates/Editor
+                        //Normal Selected: Assets/Scripts/Tier1/Tier2
+                        //Path:      /Scripts
+                        DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
+                        //Debug.Log(directoryInfo.Name);
+                        removeWords.Add("/" + directoryInfo.Name + "/");
+                    }
                 }
             }
 
@@ -87,22 +87,14 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             {
                 return GetPackageNameSpace(folderPath);
             }
-
-            folderPath = folderPath.RemoveSpaces();
-
-            foreach (var ignoreWord in GenerateIgnoredFolders())
-            {
-                folderPath = folderPath.Replace($"{ignoreWord}/", string.Empty);
-            }
-
-            return TurnPathIntoNamespace(folderPath);
+            else return TurnPathIntoNamespace(folderPath);
         }
 
         private string GetPackageNameSpace(string folderPath)
         {
             // Packages/com.unity.toolchain.win-x86_64-linux-x86_64
             string packageName = GetPackageName(folderPath);
-            Debug.Log(packageName);
+            //Debug.Log(packageName);
             var packages = PackageInfo.GetAllRegisteredPackages();
             string packageDisplayName = packageName;
             foreach (var package in packages)
@@ -131,8 +123,27 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             path = path.Remove(indexOfClassName, path.Length - indexOfClassName);
             path = path.Replace('/', '.');
-            string namespaceName = GetDefaultNameSpace();
-            return string.Join('.', namespaceName, path);
+
+            foreach (var ignoreWord in GenerateIgnoredFolders())
+            {
+                //Debug.Log(path + " " + ignoreWord);
+                if (path.Contains($".{ignoreWord}"))
+                {
+                    path = path.Replace($".{ignoreWord}", string.Empty);
+                }
+                else if (path.Contains($"{ignoreWord}."))
+                {
+                    path = path.Replace($"{ignoreWord}.", string.Empty);
+                }
+                else path = path.Replace($"{ignoreWord}", string.Empty);
+            }
+
+            path = path.RemoveSpaces();
+            if (path != string.Empty)
+            {
+                return string.Join('.', GetDefaultNameSpace(), path);
+            }
+            else return GetDefaultNameSpace();
         }
 
         private string GetDefaultNameSpace()
@@ -159,6 +170,10 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public void TogglePath(string path)
         {
+            if (selectedPaths == null)
+            {
+                selectedPaths = new List<string>();
+            }
             if (selectedPaths.Contains(path))
             {
                 selectedPaths.Remove(path);

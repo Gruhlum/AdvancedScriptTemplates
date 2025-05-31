@@ -51,7 +51,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             {
                 return;
             }
-            if (!TemplateSettings.instance.selectedPaths.Contains(path))
+            if (TemplateSettings.instance.selectedPaths != null && !TemplateSettings.instance.selectedPaths.Contains(path))
             {
                 return;
             }

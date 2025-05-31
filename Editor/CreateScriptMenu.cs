@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using HexTecGames.Basics;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
@@ -31,7 +34,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             if (TemplateSettings.instance.scriptTemplateDatas.Count > 0)
             {
                 CreateTemplate(TemplateSettings.instance.scriptTemplateDatas[0]);
-            } 
+            }
         }
         [Shortcut("Script2", KeyCode.Alpha2, ShortcutModifiers.Control | ShortcutModifiers.Alt)]
         public static void GenerateScript2()
@@ -74,16 +77,102 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
         }
 
+        [MenuItem("Assets/Fix Namespaces", priority = 19, secondaryPriority = 10000)]
+        public static void FixNamespaces()
+        {
+            var folderPaths = GetFolderPaths();
+
+            foreach (var folderPath in folderPaths)
+            {
+                FixNamespacesForFolder(folderPath);
+            }
+        }
+        private static void FixNamespacesForFolder(string folderPath)
+        {
+            List<string> scriptPaths = new List<string>();
+
+
+            Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
+            var filePaths = Directory.GetFiles(folderPath);
+
+            foreach (var filePath in filePaths)
+            {
+                if (filePath.EndsWith(".cs"))
+                {
+                    scriptPaths.Add(filePath.Replace('\\', '/'));
+                    Debug.Log(filePath);
+                }
+            }
+
+            List<Object> scriptObjects = new List<Object>();
+            foreach (var path in scriptPaths)
+            {
+                scriptObjects.Add(AssetDatabase.LoadAssetAtPath<Object>(path));
+                //Undo.RecordObject(TemplateSettings.instance, "Namespace Fix");
+            }
+            Undo.RecordObjects(scriptObjects.ToArray(), "Namespace Fix");
+
+            foreach (var path in scriptPaths)
+            {
+                FixNamespace(path);
+            }
+
+            AssetDatabase.Refresh();
+        }
+
+        private static void FixNamespace(string path)
+        {
+            string scriptText = File.ReadAllText(path);
+            int nameSpaceStart = scriptText.IndexOf("namespace");
+            int nameSpaceEnd = scriptText.Substring(nameSpaceStart).IndexOf(Environment.NewLine);
+            string currentNameSpace = scriptText.Substring(nameSpaceStart, nameSpaceEnd);
+
+            var fixedNameSpace = "namespace " + TemplateSettings.instance.GenerateNamespaceName(path);
+
+            Debug.Log(currentNameSpace + " -> " + fixedNameSpace);
+
+            scriptText = scriptText.Replace(currentNameSpace, fixedNameSpace);
+
+            File.WriteAllText(path, scriptText);
+        }
+
         public static void CreateTemplate(ScriptTemplateData data)
         {
             CreateScriptEndNameEditAction create = ScriptableObject.CreateInstance<CreateScriptEndNameEditAction>();
             create.template = data.template;
             create.data = data;
-            string newPath = Path.Combine(GetFolder(), data.newFileName + ".cs");
+            string newPath = Path.Combine(GetFolderPath(), data.newFileName + ".cs");
             Texture2D icon = EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D;
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, create, newPath, icon, null);
         }
-        private static string GetFolder()
+
+        private static List<string> GetFolderPaths()
+        {
+            Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
+
+            if (selectedObjects == null)
+            {
+                return null;
+            }
+            if (selectedObjects.Length == 0)
+            {
+                return null;
+            }
+
+            List<string> folderPaths = new List<string>();
+
+            for (int i = 0; i < selectedObjects.Length; i++)
+            {
+                string folderPath = AssetDatabase.GetAssetPath(selectedObjects[i]);
+                if (AssetDatabase.IsValidFolder(folderPath))
+                {
+                    folderPaths.Add(folderPath);
+                }
+
+            }
+            return folderPaths;
+        }
+        private static string GetFolderPath()
         {
             Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
 
@@ -128,7 +217,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             AssetDatabase.Refresh();
             Object obj = AssetDatabase.LoadAssetAtPath<Object>(pathName);
-            Selection.SetActiveObjectWithContext(obj, obj);  
+            Selection.SetActiveObjectWithContext(obj, obj);
         }
 
         private string ReplacePlaceholders(string pathName, TextAsset template)
@@ -143,17 +232,17 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             if (TemplateSettings.instance.addNameSpace)
             {
                 int spaceIndex = text.IndexOf("#NAMESPACE#");
-                text = text.Insert(spaceIndex + "#NAMESPACE#".Length, System.Environment.NewLine + "{");
+                text = text.Insert(spaceIndex + "#NAMESPACE#".Length, Environment.NewLine + "{");
 
                 int firstBracketIndex = text.IndexOf("{") + 1;
 
                 string classText = text.Substring(firstBracketIndex, text.Length - firstBracketIndex);
-                classText = classText.Replace(System.Environment.NewLine, System.Environment.NewLine + "    ");
+                classText = classText.Replace(Environment.NewLine, Environment.NewLine + "    ");
 
                 text = text.Remove(firstBracketIndex);
                 text = text.Insert(firstBracketIndex, classText);
                 text = text.Replace("#NAMESPACE#", "namespace " + nameSpace);
-                text = text.Insert(text.Length, System.Environment.NewLine + "}");
+                text = text.Insert(text.Length, Environment.NewLine + "}");
             }
             else text = text.Replace("#NAMESPACE#", string.Empty);
 
