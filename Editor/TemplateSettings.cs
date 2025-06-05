@@ -90,26 +90,29 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             else return TurnPathIntoNamespace(folderPath);
         }
 
-        private string GetPackageNameSpace(string folderPath)
+        private PackageInfo GetPackageInfo(string packageName)
         {
-            // Packages/com.unity.toolchain.win-x86_64-linux-x86_64
-            string packageName = GetPackageName(folderPath);
-            //Debug.Log(packageName);
             var packages = PackageInfo.GetAllRegisteredPackages();
-            string packageDisplayName = packageName;
             foreach (var package in packages)
             {
                 //Debug.Log(package.name);
                 if (package.name == packageName)
                 {
-                    packageDisplayName = package.displayName;
-                    break;
+                    return package;
                 }
             }
+            return null;
+        }
+
+        private string GetPackageNameSpace(string folderPath)
+        {
+            // Packages/com.unity.toolchain.win-x86_64-linux-x86_64
+            string packageName = GetPackageName(folderPath);
+            PackageInfo packageInfo = GetPackageInfo(packageName);
 
             string cleanPath = folderPath; // Packages/com.unity.toolchain.win-x86_64-linux-x86_64/Editor/TestSc.cs
             cleanPath = cleanPath.Replace("Packages/", string.Empty); // com.unity.toolchain.win-x86_64-linux-x86_64/Editor/TestSc.cs
-            cleanPath = cleanPath.Replace(packageName, packageDisplayName);
+            cleanPath = cleanPath.Replace(packageName, packageInfo.displayName);
             return TurnPathIntoNamespace(cleanPath);
         }
 
@@ -166,6 +169,22 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 return Application.companyName;
             }
             else return customScriptableObjectName;
+        }
+
+        private bool PathIsPackage(string path)
+        {
+            return path.Contains("com.");
+        }
+
+        public string GetProjectName(string path)
+        {
+            if (PathIsPackage(path))
+            {
+                string packageName = GetPackageName(path);
+                PackageInfo packageInfo = GetPackageInfo(packageName);
+                return packageInfo.displayName;
+            }
+            else return Application.productName;
         }
 
         public void TogglePath(string path)

@@ -220,14 +220,14 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             Selection.SetActiveObjectWithContext(obj, obj);
         }
 
-        private string ReplacePlaceholders(string pathName, TextAsset template)
+        private string ReplacePlaceholders(string path, TextAsset template)
         {
-            FileInfo fileInfo = new FileInfo(pathName);
+            FileInfo fileInfo = new FileInfo(path);
             string nameOfScript = Path.GetFileNameWithoutExtension(fileInfo.Name);
 
             string text = template.text;
 
-            string nameSpace = TemplateSettings.instance.GenerateNamespaceName(pathName);
+            string nameSpace = TemplateSettings.instance.GenerateNamespaceName(path);
 
             if (TemplateSettings.instance.addNameSpace)
             {
@@ -254,7 +254,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAYLOWER#", nameOfScript.Replace("Display", string.Empty).ToLowerInvariant());
             text = text.Replace("#SCRIPTABLEOBJECTNAME#", TemplateSettings.instance.GetScriptableObjectName());
             text = text.Replace("#COMPANYNAME#", Application.companyName);
-            text = text.Replace("#PROJECTNAME#", Application.productName);
+            text = text.Replace("#PROJECTNAME#", TemplateSettings.instance.GetProjectName(path));
             text = text.Replace("#NAMESPACE#", "namespace");
             text = text.Replace("#NAMESPACENAME#", nameSpace);
             return text;
