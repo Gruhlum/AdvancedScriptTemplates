@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using HexTecGames.Basics;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
@@ -80,30 +81,70 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         [MenuItem("Assets/Fix Namespaces", priority = 19, secondaryPriority = 10000)]
         public static void FixNamespaces()
         {
-            var folderPaths = GetFolderPaths();
+            var scriptFiles = FindAllScriptPaths();
 
-            foreach (var folderPath in folderPaths)
-            {
-                FixNamespacesForFolder(folderPath);
-            }
+            FixNamespaces(scriptFiles);
         }
-        private static void FixNamespacesForFolder(string folderPath)
+
+        private static List<string> FindAllScriptPaths()
         {
+            Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
+
             List<string> scriptPaths = new List<string>();
 
-
-            Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
-            var filePaths = Directory.GetFiles(folderPath);
-
-            foreach (var filePath in filePaths)
+            foreach (var obj in selectedObjects)
             {
-                if (filePath.EndsWith(".cs"))
+                string path = AssetDatabase.GetAssetPath(obj);
+                if (path.EndsWith(".cs"))
                 {
-                    scriptPaths.Add(filePath.Replace('\\', '/'));
-                    Debug.Log(filePath);
+                    scriptPaths.Add(path.Replace('\\', '/'));
+                }
+                else
+                {
+                    var results = GetScriptPathsFromFolder(path);
+                    if (results != null)
+                    {
+                        scriptPaths.AddRange(results);
+                    }
                 }
             }
 
+            return scriptPaths.Distinct().ToList();
+        }
+
+        private static List<string> GetScriptPathsFromFolder(string folderPath)
+        {
+            if (!AssetDatabase.IsValidFolder(folderPath))
+            {
+                return null;
+            }
+            List<string> scriptPaths = new List<string>();
+
+            var subDirectoryPaths = Directory.GetDirectories(folderPath).ToList();
+            foreach (var subDirectoryPath in subDirectoryPaths)
+            {
+                var results = GetScriptPathsFromFolder(subDirectoryPath);
+                if (results != null)
+                {
+                    scriptPaths.AddRange(results);
+                }
+            }
+
+            var filePaths = Directory.GetFiles(folderPath).ToList();
+
+            foreach (var result in filePaths)
+            {
+                if (result.EndsWith(".cs"))
+                {
+                    scriptPaths.Add(result.Replace('\\', '/'));
+                }
+            }
+
+            return scriptPaths;
+        }
+
+        private static void FixNamespaces(List<string> scriptPaths)
+        {
             List<Object> scriptObjects = new List<Object>();
             foreach (var path in scriptPaths)
             {
@@ -114,6 +155,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             foreach (var path in scriptPaths)
             {
+                //Debug.Log(path);
                 FixNamespace(path);
             }
 
@@ -146,32 +188,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, create, newPath, icon, null);
         }
 
-        private static List<string> GetFolderPaths()
-        {
-            Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
-
-            if (selectedObjects == null)
-            {
-                return null;
-            }
-            if (selectedObjects.Length == 0)
-            {
-                return null;
-            }
-
-            List<string> folderPaths = new List<string>();
-
-            for (int i = 0; i < selectedObjects.Length; i++)
-            {
-                string folderPath = AssetDatabase.GetAssetPath(selectedObjects[i]);
-                if (AssetDatabase.IsValidFolder(folderPath))
-                {
-                    folderPaths.Add(folderPath);
-                }
-
-            }
-            return folderPaths;
-        }
         private static string GetFolderPath()
         {
             Object[] selectedObjects = Selection.GetFiltered<Object>(SelectionMode.Assets);
