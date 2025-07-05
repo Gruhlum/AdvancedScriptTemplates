@@ -1,9 +1,7 @@
-using HexTecGames.Basics;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HexTecGames.Basics;
 using UnityEditor;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
@@ -64,7 +62,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             if (selectedPaths != null)
             {
-                foreach (var selectedPath in selectedPaths)
+                foreach (string selectedPath in selectedPaths)
                 {
                     if (folderPath.Contains(selectedPath))
                     {
@@ -78,7 +76,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 }
             }
 
-            foreach (var word in removeWords)
+            foreach (string word in removeWords)
             {
                 folderPath = folderPath.Replace(word, "/");
             }
@@ -92,8 +90,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private PackageInfo GetPackageInfo(string packageName)
         {
-            var packages = PackageInfo.GetAllRegisteredPackages();
-            foreach (var package in packages)
+            PackageInfo[] packages = PackageInfo.GetAllRegisteredPackages();
+            foreach (PackageInfo package in packages)
             {
                 //Debug.Log(package.name);
                 if (package.name == packageName)
@@ -127,7 +125,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             path = path.Remove(indexOfClassName, path.Length - indexOfClassName);
             path = path.Replace('/', '.');
 
-            foreach (var ignoreWord in GenerateIgnoredFolders())
+            foreach (string ignoreWord in GenerateIgnoredFolders())
             {
                 //Debug.Log(path + " " + ignoreWord);
                 if (path.Contains($".{ignoreWord}"))
@@ -189,10 +187,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public void TogglePath(string path)
         {
-            if (selectedPaths == null)
-            {
-                selectedPaths = new List<string>();
-            }
+            selectedPaths ??= new List<string>();
             if (selectedPaths.Contains(path))
             {
                 selectedPaths.Remove(path);
@@ -206,7 +201,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         {
             for (int i = selectedPaths.Count - 1; i >= 0; i--)
             {
-                var path = selectedPaths[i];
+                string path = selectedPaths[i];
                 if (!AssetDatabase.IsValidFolder(path))
                 {
                     selectedPaths.RemoveAt(i);

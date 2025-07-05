@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEditor;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
@@ -42,8 +36,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         public void VerifyMenu()
         {
             string path = GetFullPath();
-            var menuExist = _Menu.MenuItemExists(path);
-            var menuShouldExist = MENU_SHOULD_EXIST;
+            bool menuExist = _Menu.MenuItemExists(path);
+            bool menuShouldExist = MENU_SHOULD_EXIST;
 
             // Menu is removed but should be added
             if (!menuExist && menuShouldExist)

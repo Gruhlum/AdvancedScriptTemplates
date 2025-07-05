@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +9,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
 
         [InitializeOnLoadMethod]
-        static void Start()
+        private static void Start()
         {
             EditorApplication.projectWindowItemOnGUI += DrawFolderIcon;
         }
@@ -35,9 +31,9 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             TemplateSettings.instance.RemoveUnusedPaths();
         }
 
-        static void DrawFolderIcon(string guid, Rect rect)
+        private static void DrawFolderIcon(string guid, Rect rect)
         {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
+            string path = AssetDatabase.GUIDToAssetPath(guid);
 
             if (path == string.Empty)
             {

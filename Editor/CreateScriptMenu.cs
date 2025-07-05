@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using HexTecGames.Basics;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEditor.ShortcutManagement;
@@ -22,7 +20,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private static void CreateMenus()
         {
-            foreach (var scriptTemplateData in TemplateSettings.instance.scriptTemplateDatas)
+            foreach (ScriptTemplateData scriptTemplateData in TemplateSettings.instance.scriptTemplateDatas)
             {
                 scriptTemplateData.VerifyMenu();
             }
@@ -81,7 +79,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         [MenuItem("Assets/Fix Namespaces", priority = 19, secondaryPriority = 10000)]
         public static void FixNamespaces()
         {
-            var scriptFiles = FindAllScriptPaths();
+            List<string> scriptFiles = FindAllScriptPaths();
 
             FixNamespaces(scriptFiles);
         }
@@ -92,7 +90,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             List<string> scriptPaths = new List<string>();
 
-            foreach (var obj in selectedObjects)
+            foreach (Object obj in selectedObjects)
             {
                 string path = AssetDatabase.GetAssetPath(obj);
                 if (path.EndsWith(".cs"))
@@ -101,7 +99,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 }
                 else
                 {
-                    var results = GetScriptPathsFromFolder(path);
+                    List<string> results = GetScriptPathsFromFolder(path);
                     if (results != null)
                     {
                         scriptPaths.AddRange(results);
@@ -120,19 +118,19 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             List<string> scriptPaths = new List<string>();
 
-            var subDirectoryPaths = Directory.GetDirectories(folderPath).ToList();
-            foreach (var subDirectoryPath in subDirectoryPaths)
+            List<string> subDirectoryPaths = Directory.GetDirectories(folderPath).ToList();
+            foreach (string subDirectoryPath in subDirectoryPaths)
             {
-                var results = GetScriptPathsFromFolder(subDirectoryPath);
+                List<string> results = GetScriptPathsFromFolder(subDirectoryPath);
                 if (results != null)
                 {
                     scriptPaths.AddRange(results);
                 }
             }
 
-            var filePaths = Directory.GetFiles(folderPath).ToList();
+            List<string> filePaths = Directory.GetFiles(folderPath).ToList();
 
-            foreach (var result in filePaths)
+            foreach (string result in filePaths)
             {
                 if (result.EndsWith(".cs"))
                 {
@@ -146,14 +144,14 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         private static void FixNamespaces(List<string> scriptPaths)
         {
             List<Object> scriptObjects = new List<Object>();
-            foreach (var path in scriptPaths)
+            foreach (string path in scriptPaths)
             {
                 scriptObjects.Add(AssetDatabase.LoadAssetAtPath<Object>(path));
                 //Undo.RecordObject(TemplateSettings.instance, "Namespace Fix");
             }
             Undo.RecordObjects(scriptObjects.ToArray(), "Namespace Fix");
 
-            foreach (var path in scriptPaths)
+            foreach (string path in scriptPaths)
             {
                 //Debug.Log(path);
                 FixNamespace(path);
@@ -169,7 +167,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             int nameSpaceEnd = scriptText.Substring(nameSpaceStart).IndexOf(Environment.NewLine);
             string currentNameSpace = scriptText.Substring(nameSpaceStart, nameSpaceEnd);
 
-            var fixedNameSpace = "namespace " + TemplateSettings.instance.GenerateNamespaceName(path);
+            string fixedNameSpace = "namespace " + TemplateSettings.instance.GenerateNamespaceName(path);
 
             Debug.Log(currentNameSpace + " -> " + fixedNameSpace);
 
@@ -222,7 +220,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 FileInfo fileInfo = new FileInfo(pathName);
                 string nameOfScript = Path.GetFileNameWithoutExtension(fileInfo.Name);
 
-                foreach (var otherData in data.otherItems)
+                foreach (TemplateGroupItem otherData in data.otherItems)
                 {
                     string otherPathName = pathName.Replace(nameOfScript, nameOfScript + otherData.suffix);
                     Debug.Log(otherPathName);
