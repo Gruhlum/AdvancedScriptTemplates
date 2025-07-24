@@ -20,6 +20,10 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private static void CreateMenus()
         {
+            if (TemplateSettings.instance.scriptTemplateDatas == null)
+            {
+                return;
+            }
             foreach (ScriptTemplateData scriptTemplateData in TemplateSettings.instance.scriptTemplateDatas)
             {
                 scriptTemplateData.VerifyMenu();

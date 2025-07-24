@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 #NAMESPACE#
-public class #SCRIPTNAME# : MonoBehaviour
+public class #SCRIPTNAME# : AdvancedBehaviour
 {
     
 }

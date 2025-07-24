@@ -13,7 +13,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
     {
         public enum DefaultNameSpaceType { custom, companyName }
         public List<ScriptTemplateData> scriptTemplateDatas;
-        public List<KeywordReplacement> keywordReplacements;
+        // public List<KeywordReplacement> keywordReplacements;
         //public KeywordReplacement replacement;
         [Header("Namespace Settings")]
         public bool addNameSpace = true;
@@ -123,22 +123,25 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
 
             path = path.Remove(indexOfClassName, path.Length - indexOfClassName);
-            path = path.Replace('/', '.');
+
 
             foreach (string ignoreWord in GenerateIgnoredFolders())
             {
                 //Debug.Log(path + " " + ignoreWord);
-                if (path.Contains($".{ignoreWord}"))
+                if (path == ignoreWord)
                 {
-                    path = path.Replace($".{ignoreWord}", string.Empty);
+                    path = path.Replace(ignoreWord, string.Empty);
                 }
-                else if (path.Contains($"{ignoreWord}."))
+                if (path.StartsWith($"{ignoreWord}/"))
                 {
-                    path = path.Replace($"{ignoreWord}.", string.Empty);
+                    path = path.Replace($"{ignoreWord}/", string.Empty);
                 }
-                else path = path.Replace($"{ignoreWord}", string.Empty);
+                if (path.Contains($"/{ignoreWord}/") || path.EndsWith($"/{ignoreWord}"))
+                {
+                    path = path.Replace($"/{ignoreWord}", string.Empty);
+                }
             }
-
+            path = path.Replace('/', '.');
             path = path.RemoveSpaces();
             if (path != string.Empty)
             {

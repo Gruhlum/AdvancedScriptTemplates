@@ -7,8 +7,8 @@ using UnityEditor;
 [CustomEditor(typeof(#SCRIPTNAMEWITHOUTEDITOR#))]
 public class #SCRIPTNAME# : Editor
 {
-	public override void OnInspectorGUI()
-	{
-		base.OnInspectorGUI();
-	}
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+    }
 }
