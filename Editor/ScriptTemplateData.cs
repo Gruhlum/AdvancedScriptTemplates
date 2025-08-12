@@ -6,9 +6,9 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
     [CreateAssetMenu(menuName = "HexTecGames/AdvancedScriptTemplates/ScriptTemplateData")]
     public class ScriptTemplateData : ScriptableObject
     {
-        public string path;
+        public string menuItemName;
         public string newFileName;
-        [Tooltip("% = CTRL | # = SHIFT | & = ALT")] public string shortcut;
+        //[Tooltip("% = CTRL | # = SHIFT | & = ALT")] public string shortcut;
         public int priority = 10;
         public TextAsset template;
         public List<TemplateGroupItem> otherItems = new List<TemplateGroupItem>();
@@ -19,9 +19,9 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private void OnValidate()
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(menuItemName))
             {
-                path = name;
+                menuItemName = name;
             }
             if (string.IsNullOrEmpty(newFileName))
             {
@@ -30,7 +30,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         }
         public string GetFullPath()
         {
-            return $"{MENU_PATH}/{path}";
+            return $"{MENU_PATH}/{menuItemName}";
         }
 
         public void VerifyMenu()
@@ -42,12 +42,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             // Menu is removed but should be added
             if (!menuExist && menuShouldExist)
             {
-                // Shortcut doesn't work!
-                _Menu.AddMenuItem(path, shortcut, false, priority, MenuClicked, () => true);
-                //var results = ShortcutManager.instance.GetAvailableShortcutIds();
-                //Debug.Log(string.Join(", ", results));
-                //KeyCombination keyCombination = new KeyCombination(KeyCode.F10, ShortcutModifiers.Shift);
-                //ShortcutManager.instance.RebindShortcut(path, new ShortcutBinding(keyCombination));
+                //TODO: Shortcut doesn't work!
+                _Menu.AddMenuItem(path, string.Empty, false, priority, MenuClicked, () => true);
             }
             // Menu exist but should be removed
             else if (menuExist && !menuShouldExist)

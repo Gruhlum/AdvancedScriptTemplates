@@ -72,6 +72,5 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
             GUI.DrawTexture(imageRect, texture);
         }
-
     }
 }

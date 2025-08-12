@@ -6,10 +6,10 @@ using Unity.Networking.Transport;
 using UnityEngine;
 
 #NAMESPACE#
-public class #SCRIPTNAME# : NetMessage
+public class #SCRIPT_NAME# : NetMessage
 {
-    public static event Action<#SCRIPTNAME#> OnClientRecieved;
-    public static event Action<#SCRIPTNAME#, NetworkConnection> OnServerRecieved;
+    public static event Action<#SCRIPT_NAME#> OnClientRecieved;
+    public static event Action<#SCRIPT_NAME#, NetworkConnection> OnServerRecieved;
 
      public override OpCode Code
      {
@@ -18,12 +18,12 @@ public class #SCRIPTNAME# : NetMessage
              return OpCode.None;
          }
      }
-public #SCRIPTNAME#()
+public #SCRIPT_NAME#()
 {
 
 }
 
-public #SCRIPTNAME#(DataStreamReader reader) : base(reader)
+public #SCRIPT_NAME#(DataStreamReader reader) : base(reader)
 {
 }
 protected override void SerializeData(ref DataStreamWriter writer)

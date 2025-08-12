@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 #NAMESPACE#
-public interface #SCRIPTNAME#
+public interface #SCRIPT_NAME#
 {
     
 }

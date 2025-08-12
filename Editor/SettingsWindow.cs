@@ -9,6 +9,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         private void OnEnable()
         {
             editor = UnityEditor.Editor.CreateEditor(TemplateSettings.instance);
+            titleContent = new UnityEngine.GUIContent("Template Settings");
         }
 
         [MenuItem("Tools/AdvancedScriptTemplates/Settings", priority = 0)]

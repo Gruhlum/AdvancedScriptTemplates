@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 #NAMESPACE#
-public class #SCRIPTNAME# : Display<#SCRIPTNAME#, #SCRIPTNAMEWITHOUTDISPLAY#>
+public class #SCRIPT_NAME# : Display<#SCRIPT_NAME#, #SCRIPT_NAME_WITHOUT_DISPLAY#>
 {
-    protected override void DrawItem(#SCRIPTNAMEWITHOUTDISPLAY# #SCRIPTNAMEWITHOUTDISPLAYLOWER#)
+    protected override void DrawItem(#SCRIPT_NAME_WITHOUT_DISPLAY# #SCRIPT_NAME_WITHOUT_DISPLAY_TO_LOWER#)
     {
         throw new System.NotImplementedException();
     }

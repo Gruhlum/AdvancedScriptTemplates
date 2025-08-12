@@ -4,7 +4,7 @@ using HexTecGames.Basics;
 using UnityEngine;
 
 #NAMESPACE#
-public class #SCRIPTNAME# : AdvancedBehaviour
+public class #SCRIPT_NAME# : AdvancedBehaviour
 {
     
 }

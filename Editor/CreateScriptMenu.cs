@@ -80,11 +80,10 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
         }
 
-        [MenuItem("Assets/Fix Namespaces", priority = 19, secondaryPriority = 10000)]
+        [MenuItem("Assets/Generate Namespace", priority = 19, secondaryPriority = 1000)]
         public static void FixNamespaces()
         {
             List<string> scriptFiles = FindAllScriptPaths();
-
             FixNamespaces(scriptFiles);
         }
 
@@ -217,20 +216,17 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public override void Action(int instanceId, string pathName, string resourceFile)
         {
-            string templateText = ReplacePlaceholders(pathName, template);
-            File.WriteAllText(pathName, templateText);
+            WriteTemplateToFile(pathName, template);
+
             if (data.otherItems != null && data.otherItems.Count > 0)
             {
-                FileInfo fileInfo = new FileInfo(pathName);
-                string nameOfScript = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                string baseName = Path.GetFileNameWithoutExtension(pathName);
 
-                foreach (TemplateGroupItem otherData in data.otherItems)
+                foreach (TemplateGroupItem item in data.otherItems)
                 {
-                    string otherPathName = pathName.Replace(nameOfScript, nameOfScript + otherData.suffix);
-                    Debug.Log(otherPathName);
-                    templateText = ReplacePlaceholders(otherPathName, otherData.template);
-                    File.WriteAllText(otherPathName, templateText);
-                    AssetDatabase.LoadAssetAtPath<Object>(otherPathName);
+                    string otherPath = pathName.Replace(baseName, baseName + item.suffix);
+                    WriteTemplateToFile(otherPath, item.template);
+                    AssetDatabase.LoadAssetAtPath<Object>(otherPath);
                 }
             }
             AssetDatabase.Refresh();
@@ -238,44 +234,47 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             Selection.SetActiveObjectWithContext(obj, obj);
         }
 
+        private void WriteTemplateToFile(string path, TextAsset template)
+        {
+            string processedText = ReplacePlaceholders(path, template);
+            File.WriteAllText(path, processedText);
+        }
+
         private string ReplacePlaceholders(string path, TextAsset template)
         {
             FileInfo fileInfo = new FileInfo(path);
-            string nameOfScript = Path.GetFileNameWithoutExtension(fileInfo.Name);
+            string scriptName = Path.GetFileNameWithoutExtension(fileInfo.Name);
 
             string text = template.text;
 
+            text = ReplaceNamespacePlaceholder(path, text);
+
+            foreach (KeywordReplacement replacement in TemplateSettings.instance.ReplacementData.keywordReplacements)
+            {
+                text = text.Replace(replacement.Keyword, replacement.GetReplacement(scriptName));
+            }
+            return text;
+        }
+
+        private static string ReplaceNamespacePlaceholder(string path, string text)
+        {
+            if (!TemplateSettings.instance.addNameSpace)
+            {
+                return text.Replace("#NAMESPACE#", string.Empty);
+            }
+
             string nameSpace = TemplateSettings.instance.GenerateNamespaceName(path);
 
-            if (TemplateSettings.instance.addNameSpace)
-            {
-                int spaceIndex = text.IndexOf("#NAMESPACE#");
-                text = text.Insert(spaceIndex + "#NAMESPACE#".Length, Environment.NewLine + "{");
+            text = text.Replace("#NAMESPACE#", $"namespace {nameSpace}{Environment.NewLine}{{");
 
-                int firstBracketIndex = text.IndexOf("{") + 1;
+            int openBraceIndex = text.IndexOf('{') + 1;
 
-                string classText = text.Substring(firstBracketIndex, text.Length - firstBracketIndex);
-                classText = classText.Replace(Environment.NewLine, Environment.NewLine + "    ");
+            string innerContent = text.Substring(openBraceIndex);
+            string indentedContent = "    " + innerContent.Replace(Environment.NewLine, Environment.NewLine + "    ");
 
-                text = text.Remove(firstBracketIndex);
-                text = text.Insert(firstBracketIndex, classText);
-                text = text.Replace("#NAMESPACE#", "namespace " + nameSpace);
-                text = text.Insert(text.Length, Environment.NewLine + "}");
-            }
-            else text = text.Replace("#NAMESPACE#", string.Empty);
+            string result = text.Substring(0, openBraceIndex) + indentedContent + Environment.NewLine + "}";
 
-            text = text.Replace("#SCRIPTNAME#", nameOfScript);
-            text = text.Replace("#SCRIPTNAMEWITHOUTEDITOR#", nameOfScript.Replace("Editor", string.Empty));
-            text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAY#", nameOfScript.Replace("Display", string.Empty));
-            text = text.Replace("#SCRIPTNAMEWITHOUTCONTROLLER#", nameOfScript.Replace("Controller", string.Empty));
-            text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAYANDCONTROLLER#", nameOfScript.Replace("Controller", string.Empty).Replace("Display", string.Empty));
-            text = text.Replace("#SCRIPTNAMEWITHOUTDISPLAYLOWER#", nameOfScript.Replace("Display", string.Empty).ToLowerInvariant());
-            text = text.Replace("#SCRIPTABLEOBJECTNAME#", TemplateSettings.instance.GetScriptableObjectName());
-            text = text.Replace("#COMPANYNAME#", Application.companyName);
-            text = text.Replace("#PROJECTNAME#", TemplateSettings.instance.GetProjectName(path));
-            text = text.Replace("#NAMESPACE#", "namespace");
-            text = text.Replace("#NAMESPACENAME#", nameSpace);
-            return text;
+            return result;
         }
     }
 }

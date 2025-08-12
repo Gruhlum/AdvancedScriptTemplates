@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 #NAMESPACE#
-[CreateAssetMenu(menuName = "#SCRIPTABLEOBJECTNAME#/#PROJECTNAME#/#SCRIPTNAME#")]
-public class #SCRIPTNAME# : ScriptableObject
+[CreateAssetMenu(menuName = "#SCRIPTABLE_OBJECT_NAME#/#PROJECT_NAME#/#SCRIPT_NAME#")]
+public class #SCRIPT_NAME# : ScriptableObject
 {
     
 }

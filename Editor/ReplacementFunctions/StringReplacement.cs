@@ -3,11 +3,11 @@ using UnityEngine;
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
     [System.Serializable]
-    public class StringReplacementFunction : ReplacementFunction
+    public class StringReplacement : ReplacementFunction
     {
         [SerializeField] private string returnValue = default;
 
-        public override string GetReplacement()
+        public override string GetReplacement(string scriptName, string path)
         {
             return returnValue;
         }

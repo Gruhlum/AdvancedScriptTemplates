@@ -12,27 +12,36 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
     public class TemplateSettings : ScriptableSingleton<TemplateSettings>
     {
         public enum DefaultNameSpaceType { custom, companyName }
+
         public List<ScriptTemplateData> scriptTemplateDatas;
-        // public List<KeywordReplacement> keywordReplacements;
-        //public KeywordReplacement replacement;
+        [SerializeField] private KeywordReplacementCollection replacementData = default;
+
         [Header("Namespace Settings")]
         public bool addNameSpace = true;
         public bool addDefaultNameSpace = true;
-        [Space]
         public DefaultNameSpaceType defaultNameSpaceType = DefaultNameSpaceType.companyName;
         [DrawIf(nameof(defaultNameSpaceType), DefaultNameSpaceType.custom)]
         public string customNameSpace;
 
         public DefaultNameSpaceType defaultNameSO = DefaultNameSpaceType.companyName;
         [DrawIf(nameof(defaultNameSO), DefaultNameSpaceType.custom)]
-        [Tooltip("The first sub-menu for creating the SO")] public string customScriptableObjectName;
-
-        public bool addFolderNameSpace = true;
+        [Tooltip("The first sub menu for creating the SO")] public string customScriptableObjectName;
 
         [TextArea] public string ignoreFolders = "Assets, Scripts, Game, Test, Runtime";
 
         public List<string> selectedPaths;
 
+        public KeywordReplacementCollection ReplacementData
+        {
+            get
+            {
+                return this.replacementData;
+            }
+            set
+            {
+                this.replacementData = value;
+            }
+        }
 
         private List<string> GenerateIgnoredFolders()
         {
@@ -51,13 +60,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public string GenerateNamespaceName(string folderPath) // Assets/Test/IJohn.cs
         {
-            if (!addFolderNameSpace)
-            {
-                if (addDefaultNameSpace)
-                {
-                    return GetDefaultNameSpace();
-                }
-            }
             List<string> removeWords = new List<string>();
 
             if (selectedPaths != null)
@@ -116,38 +118,27 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private string TurnPathIntoNamespace(string path)
         {
-            int indexOfClassName = path.LastIndexOf('/');
-            if (indexOfClassName == -1)
+            int lastSlashIndex = path.LastIndexOf('/');
+            if (lastSlashIndex == -1)
             {
                 return GetDefaultNameSpace();
             }
 
-            path = path.Remove(indexOfClassName, path.Length - indexOfClassName);
+            path = path.Substring(0, lastSlashIndex);
 
+            foreach (string ignore in GenerateIgnoredFolders())
+            {
+                path = path.Replace($"{ignore}/", string.Empty)
+                           .Replace($"/{ignore}/", "/")
+                           .Replace($"/{ignore}", string.Empty);
 
-            foreach (string ignoreWord in GenerateIgnoredFolders())
-            {
-                //Debug.Log(path + " " + ignoreWord);
-                if (path == ignoreWord)
-                {
-                    path = path.Replace(ignoreWord, string.Empty);
-                }
-                if (path.StartsWith($"{ignoreWord}/"))
-                {
-                    path = path.Replace($"{ignoreWord}/", string.Empty);
-                }
-                if (path.Contains($"/{ignoreWord}/") || path.EndsWith($"/{ignoreWord}"))
-                {
-                    path = path.Replace($"/{ignoreWord}", string.Empty);
-                }
+                if (path == ignore)
+                    path = string.Empty;
             }
-            path = path.Replace('/', '.');
-            path = path.RemoveSpaces();
-            if (path != string.Empty)
-            {
-                return string.Join('.', GetDefaultNameSpace(), path);
-            }
-            else return GetDefaultNameSpace();
+
+            path = path.Replace('/', '.').RemoveSpaces();
+
+            return string.IsNullOrEmpty(path) ? GetDefaultNameSpace() : $"{GetDefaultNameSpace()}.{path}";
         }
 
         private string GetDefaultNameSpace()
