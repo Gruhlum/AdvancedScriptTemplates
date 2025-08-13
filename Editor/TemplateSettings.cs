@@ -11,20 +11,20 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
     [FilePath("Assets/Plugins/AdvancedScriptTemplates/Settings.asset", FilePathAttribute.Location.ProjectFolder)]
     public class TemplateSettings : ScriptableSingleton<TemplateSettings>
     {
-        public enum DefaultNameSpaceType { custom, companyName }
+        public enum DefaultNamespaceType { custom, companyName }
 
         public List<ScriptTemplateData> scriptTemplateDatas;
         [SerializeField] private KeywordReplacementCollection replacementData = default;
 
         [Header("Namespace Settings")]
-        public bool addNameSpace = true;
-        public bool addDefaultNameSpace = true;
-        public DefaultNameSpaceType defaultNameSpaceType = DefaultNameSpaceType.companyName;
-        [DrawIf(nameof(defaultNameSpaceType), DefaultNameSpaceType.custom)]
-        public string customNameSpace;
+        public bool addNamespace = true;
+        public bool addDefaultNamespace = true;
+        public DefaultNamespaceType defaultNamespaceType = DefaultNamespaceType.companyName;
+        [DrawIf(nameof(defaultNamespaceType), DefaultNamespaceType.custom)]
+        public string customNamespace;
 
-        public DefaultNameSpaceType defaultNameSO = DefaultNameSpaceType.companyName;
-        [DrawIf(nameof(defaultNameSO), DefaultNameSpaceType.custom)]
+        public DefaultNamespaceType defaultNameSO = DefaultNamespaceType.companyName;
+        [DrawIf(nameof(defaultNameSO), DefaultNamespaceType.custom)]
         [Tooltip("The first sub menu for creating the SO")] public string customScriptableObjectName;
 
         [TextArea] public string ignoreFolders = "Assets, Scripts, Game, Test, Runtime";
@@ -144,11 +144,11 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         private string GetDefaultNameSpace()
         {
             string namespaceName = null;
-            if (addDefaultNameSpace)
+            if (addDefaultNamespace)
             {
-                if (defaultNameSpaceType == DefaultNameSpaceType.custom)
+                if (defaultNamespaceType == DefaultNamespaceType.custom)
                 {
-                    namespaceName = customNameSpace.Replace(" ", string.Empty);
+                    namespaceName = customNamespace.Replace(" ", string.Empty);
                 }
                 else namespaceName = Application.companyName.Replace(" ", string.Empty);
             }
@@ -156,7 +156,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         }
         public string GetScriptableObjectName()
         {
-            if (defaultNameSO == DefaultNameSpaceType.companyName)
+            if (defaultNameSO == DefaultNamespaceType.companyName)
             {
                 return Application.companyName;
             }

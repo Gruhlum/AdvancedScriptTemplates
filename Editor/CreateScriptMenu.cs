@@ -258,7 +258,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private static string ReplaceNamespacePlaceholder(string path, string text)
         {
-            if (!TemplateSettings.instance.addNameSpace)
+            if (!TemplateSettings.instance.addNamespace)
             {
                 return text.Replace("#NAMESPACE#", string.Empty);
             }
