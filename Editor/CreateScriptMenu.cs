@@ -80,11 +80,11 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
         }
 
-        [MenuItem("Assets/Generate Namespace", priority = 19, secondaryPriority = 1000)]
-        public static void FixNamespaces()
+        [MenuItem("Assets/Regenerate Namespace", priority = 19, secondaryPriority = 1000)]
+        public static void RegenerateNamespaces()
         {
             List<string> scriptFiles = FindAllScriptPaths();
-            FixNamespaces(scriptFiles);
+            RegenerateNamespaces(scriptFiles);
         }
 
         private static List<string> FindAllScriptPaths()
@@ -144,7 +144,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             return scriptPaths;
         }
 
-        private static void FixNamespaces(List<string> scriptPaths)
+        private static void RegenerateNamespaces(List<string> scriptPaths)
         {
             List<Object> scriptObjects = new List<Object>();
             foreach (string path in scriptPaths)
@@ -157,13 +157,13 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             foreach (string path in scriptPaths)
             {
                 //Debug.Log(path);
-                FixNamespace(path);
+                RegenerateNamespace(path);
             }
 
             AssetDatabase.Refresh();
         }
 
-        private static void FixNamespace(string path)
+        private static void RegenerateNamespace(string path)
         {
             string scriptText = File.ReadAllText(path);
             int nameSpaceStart = scriptText.IndexOf("namespace");

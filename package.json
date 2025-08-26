@@ -1,6 +1,6 @@
 {
   "name": "com.hextecgames.advancedscripttemplates",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "displayName": "AdvancedScriptTemplates",
   "description": "Package that allows for more advanced custom script templates, including automatically adding namespaces based on the folder the script was created in",
   "unity": "2022.1",

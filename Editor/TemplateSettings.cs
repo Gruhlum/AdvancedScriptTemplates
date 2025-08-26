@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using HexTecGames.Basics;
 using UnityEditor;
 using UnityEngine;
@@ -128,12 +129,12 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             foreach (string ignore in GenerateIgnoredFolders())
             {
-                path = path.Replace($"{ignore}/", string.Empty)
-                           .Replace($"/{ignore}/", "/")
-                           .Replace($"/{ignore}", string.Empty);
+                // Match folder names exactly, surrounded by slashes or start/end of string
+                string pattern = $@"(?<=^|/){Regex.Escape(ignore)}(?=/|$)";
+                path = Regex.Replace(path, pattern, string.Empty);
 
-                if (path == ignore)
-                    path = string.Empty;
+                // Clean up any double slashes or leading/trailing slashes
+                path = Regex.Replace(path, @"//+", "/").Trim('/');
             }
 
             path = path.Replace('/', '.').RemoveSpaces();
