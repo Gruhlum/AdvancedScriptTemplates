@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 #NAMESPACE#
 public class #SCRIPT_NAME# : AdvancedBehaviour
