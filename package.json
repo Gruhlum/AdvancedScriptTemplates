@@ -16,5 +16,6 @@
   ],
   "dependencies": {
     "com.hextecgames.basics": "1.0.0"
-  }
+  },
+  "hideInEditor": false
 }
