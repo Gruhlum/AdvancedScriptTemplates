@@ -32,6 +32,43 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         public List<string> selectedPaths;
 
+
+        private void Awake()
+        {
+            if (ReplacementData == null)
+            {
+                ReplacementData = TryToFindAsset<KeywordReplacementCollection>("KeywordReplacements");
+            }
+            if (scriptTemplateDatas == null || scriptTemplateDatas.Count <= 0)
+            {
+                scriptTemplateDatas = new List<ScriptTemplateData>
+                {
+                    TryToFindAsset<ScriptTemplateData>("MonoBehaviour"),
+                    TryToFindAsset<ScriptTemplateData>("ScriptableObject"),
+                    TryToFindAsset<ScriptTemplateData>("SerializedClass"),
+                    TryToFindAsset<ScriptTemplateData>("Interface"),
+                    TryToFindAsset<ScriptTemplateData>("Editor")
+                };
+            }
+        }
+
+        private T TryToFindAsset<T>(string searchFilter) where T : Object
+        {
+            string searchFolder = "Packages/com.hextecgames.advancedscripttemplates/ScriptTemplateDatas";
+            string[] guids = AssetDatabase.FindAssets(searchFilter, new[] { searchFolder });
+
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+
+                if (path.EndsWith(".asset") && path.Contains(searchFilter))
+                {
+                    return AssetDatabase.LoadAssetAtPath<T>(path);
+                }
+            }
+            return null;
+        }
+
         public KeywordReplacementCollection ReplacementData
         {
             get

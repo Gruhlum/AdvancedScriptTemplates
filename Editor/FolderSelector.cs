@@ -67,7 +67,8 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
             if (texture == null)
             {
-                texture = Resources.Load<Texture>("Folder_Normal");
+                string assetPath = "Packages/com.hextecgames.advancedscripttemplates/Icons/Folder_Normal.png";
+                texture = AssetDatabase.LoadAssetAtPath<Texture>(assetPath);
             }
             GUI.DrawTexture(imageRect, texture);
         }
