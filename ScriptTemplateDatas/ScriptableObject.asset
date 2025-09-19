@@ -12,8 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0efa6cdfbd7e154db4047def0fa3168, type: 3}
   m_Name: ScriptableObject
   m_EditorClassIdentifier: 
-  path: ScriptableObject
+  menuItemName: ScriptableObject
   newFileName: ScriptableObject
-  shortcut: '#&2'
+  suffix: 
   priority: 11
   template: {fileID: 4900000, guid: fa701770e346b1243b93430e103baa1f, type: 3}
+  keywordReplacements:
+    keywordReplacements:
+    - keyword: '#SCRIPT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794450
+    - keyword: '#SCRIPTABLE_OBJECT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794451
+    - keyword: '#PROJECT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794452
+  otherItems: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8711169386283794450
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: 
+        toLower: 0
+    - rid: 8711169386283794451
+      type: {class: ScriptableObjectNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data: 
+    - rid: 8711169386283794452
+      type: {class: ProjectNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data: 

@@ -6,10 +6,15 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
     public class ScriptNameReplacement : ReplacementFunction
     {
         [SerializeField] private string additionalRemoval = default;
+        [SerializeField] private string suffix = default;
         [SerializeField] private bool toLower = default;
         public override string GetReplacement(string scriptName, string path)
         {
             string result = RemoveAdditionalString(scriptName);
+            if (!string.IsNullOrEmpty(suffix))
+            {
+                result += suffix;
+            }
             if (toLower)
             {
                 return result.ToLowerInvariant();

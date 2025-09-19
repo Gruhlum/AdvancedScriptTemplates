@@ -179,12 +179,12 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             File.WriteAllText(path, scriptText);
         }
 
-        public static void CreateTemplate(ScriptTemplateData data)
+        public static void CreateTemplate(ScriptTemplateData templateData)
         {
             CreateScriptEndNameEditAction create = ScriptableObject.CreateInstance<CreateScriptEndNameEditAction>();
-            create.template = data.template;
-            create.data = data;
-            string newPath = Path.Combine(GetFolderPath(), data.newFileName + ".cs");
+
+            create.templateData = templateData;
+            string newPath = Path.Combine(GetFolderPath(), templateData.newFileName + ".cs");
             Texture2D icon = EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D;
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, create, newPath, icon, null);
         }
@@ -211,21 +211,20 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
     internal class CreateScriptEndNameEditAction : EndNameEditAction
     {
-        public TextAsset template;
-        public ScriptTemplateData data;
+        public ScriptTemplateData templateData;
 
         public override void Action(int instanceId, string pathName, string resourceFile)
         {
-            WriteTemplateToFile(pathName, template);
+            WriteTemplateToFile(pathName, templateData);
 
-            if (data.otherItems != null && data.otherItems.Count > 0)
+            if (templateData.otherItems != null && templateData.otherItems.Count > 0)
             {
                 string baseName = Path.GetFileNameWithoutExtension(pathName);
 
-                foreach (TemplateGroupItem item in data.otherItems)
+                foreach (var item in templateData.otherItems)
                 {
                     string otherPath = pathName.Replace(baseName, baseName + item.suffix);
-                    WriteTemplateToFile(otherPath, item.template);
+                    WriteTemplateToFile(otherPath, item);
                     AssetDatabase.LoadAssetAtPath<Object>(otherPath);
                 }
             }
@@ -234,22 +233,22 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             Selection.SetActiveObjectWithContext(obj, obj);
         }
 
-        private void WriteTemplateToFile(string path, TextAsset template)
+        private void WriteTemplateToFile(string path, ScriptTemplateData templateData)
         {
-            string processedText = ReplacePlaceholders(path, template);
+            string processedText = ReplacePlaceholders(path, templateData);
             File.WriteAllText(path, processedText);
         }
 
-        private string ReplacePlaceholders(string path, TextAsset template)
+        private string ReplacePlaceholders(string path, ScriptTemplateData templateData)
         {
             FileInfo fileInfo = new FileInfo(path);
             string scriptName = Path.GetFileNameWithoutExtension(fileInfo.Name);
 
-            string text = template.text;
+            string text = templateData.template.text;
 
             text = ReplaceNamespacePlaceholder(path, text);
 
-            foreach (KeywordReplacement replacement in TemplateSettings.instance.ReplacementData.keywordReplacements)
+            foreach (KeywordReplacement replacement in templateData.keywordReplacements)
             {
                 text = text.Replace(replacement.Keyword, replacement.GetReplacement(scriptName));
             }

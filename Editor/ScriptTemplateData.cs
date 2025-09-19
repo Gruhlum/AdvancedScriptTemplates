@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
@@ -8,10 +9,12 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
     {
         public string menuItemName;
         public string newFileName;
+        public string suffix;
         //[Tooltip("% = CTRL | # = SHIFT | & = ALT")] public string shortcut;
         public int priority = 10;
         public TextAsset template;
-        public List<TemplateGroupItem> otherItems = new List<TemplateGroupItem>();
+        public KeywordReplacementCollection keywordReplacements;
+        public List<ScriptTemplateData> otherItems = new List<ScriptTemplateData>();
 
         private const string MENU_PATH = "Assets/Create";
         private static bool MENU_SHOULD_EXIST = true;
@@ -28,6 +31,7 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 newFileName = name;
             }
         }
+
         public string GetFullPath()
         {
             return $"{MENU_PATH}/{menuItemName}";

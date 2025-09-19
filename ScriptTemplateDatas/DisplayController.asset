@@ -12,10 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0efa6cdfbd7e154db4047def0fa3168, type: 3}
   m_Name: DisplayController
   m_EditorClassIdentifier: 
-  path: DisplayController
+  menuItemName: DisplayController
   newFileName: DisplayController
-  shortcut: '#&7'
+  suffix: Controller
   priority: 16
   template: {fileID: 4900000, guid: 1adcc52cbcf55d34fb92a8da4af8d0cc, type: 3}
-  suffix: Controller
-  otherDatas: []
+  keywordReplacements:
+    keywordReplacements:
+    - keyword: '#SCRIPT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794457
+    - keyword: '#SCRIPT_NAME_WITHOUT_CONTROLLER#'
+      replacementFunction:
+        rid: 8711169386283794460
+    - keyword: '#SCRIPT_NAME_WITHOUT_DISPLAY_CONTROLLER#'
+      replacementFunction:
+        rid: 8711169386283794461
+  otherItems: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8711169386283794457
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: 
+        toLower: 0
+    - rid: 8711169386283794460
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: Controller
+        toLower: 0
+    - rid: 8711169386283794461
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: DisplayController
+        toLower: 0

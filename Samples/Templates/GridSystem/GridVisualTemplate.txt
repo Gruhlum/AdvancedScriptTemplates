@@ -1,0 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+using HexTecGames.Basics;
+using HexTecGames.GridBaseSystem;
+using UnityEngine;
+using TMPro;
+
+#NAMESPACE#
+public class #SCRIPT_NAME# : SingleObjectVisual<#SCRIPT_NAME_NO_VISUAL#, #SCRIPT_NAME_DATA_NO_VISUAL#, #SCRIPT_NAME#>
+{
+    
+}

@@ -10,41 +10,43 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0efa6cdfbd7e154db4047def0fa3168, type: 3}
-  m_Name: Display
+  m_Name: GridVisual
   m_EditorClassIdentifier: 
-  menuItemName: Display
-  newFileName: Display
-  suffix: 
+  menuItemName: GridVisual
+  newFileName: GridVisual
+  suffix: Visual
   priority: 15
-  template: {fileID: 4900000, guid: abb54a95190f899478df544b2aa5c645, type: 3}
+  template: {fileID: 4900000, guid: 665897db73d32124299487ecb4a179e4, type: 3}
   keywordReplacements:
     keywordReplacements:
     - keyword: '#SCRIPT_NAME#'
       replacementFunction:
-        rid: 8711169386283794456
-    - keyword: '#SCRIPT_NAME_WITHOUT_DISPLAY#'
+        rid: 8711169386283794476
+    - keyword: '#SCRIPT_NAME_NO_VISUAL#'
       replacementFunction:
-        rid: 8711169386283794459
-    - keyword: '#SCRIPT_NAME_WITHOUT_DISPLAY_TO_LOWER#'
+        rid: 8711169386283794482
+    - keyword: '#SCRIPT_NAME_DATA_NO_VISUAL#'
       replacementFunction:
-        rid: 8711169386283794458
-  otherItems:
-  - {fileID: 11400000, guid: d1025aba5dd61f248859423b5b53f3ce, type: 2}
+        rid: 8711169386283794483
+  otherItems: []
   references:
     version: 2
     RefIds:
-    - rid: 8711169386283794456
+    - rid: 8711169386283794476
       type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
       data:
         additionalRemoval: 
+        suffix: 
         toLower: 0
-    - rid: 8711169386283794458
+    - rid: 8711169386283794482
       type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
       data:
-        additionalRemoval: Display
-        toLower: 1
-    - rid: 8711169386283794459
+        additionalRemoval: Visual
+        suffix: 
+        toLower: 0
+    - rid: 8711169386283794483
       type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
       data:
-        additionalRemoval: Display
+        additionalRemoval: Visual
+        suffix: Data
         toLower: 0

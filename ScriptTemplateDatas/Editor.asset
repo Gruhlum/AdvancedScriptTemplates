@@ -12,8 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0efa6cdfbd7e154db4047def0fa3168, type: 3}
   m_Name: Editor
   m_EditorClassIdentifier: 
-  path: Editor
+  menuItemName: Editor
   newFileName: Editor
-  shortcut: '#&5'
+  suffix: 
   priority: 14
   template: {fileID: 4900000, guid: 54d2bdcf04a04d54998eafca1087c076, type: 3}
+  keywordReplacements:
+    keywordReplacements:
+    - keyword: '#SCRIPT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794455
+    - keyword: '#SCRIPT_NAME_WITHOUT_EDITOR#'
+      replacementFunction:
+        rid: 8711169386283794455
+  otherItems: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8711169386283794455
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: Editor
+        toLower: 0

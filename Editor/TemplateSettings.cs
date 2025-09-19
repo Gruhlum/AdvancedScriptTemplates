@@ -15,7 +15,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
         public enum DefaultNamespaceType { custom, companyName }
 
         public List<ScriptTemplateData> scriptTemplateDatas;
-        [SerializeField] private KeywordReplacementCollection replacementData = default;
 
         [Header("Namespace Settings")]
         public bool addNamespace = true;
@@ -35,10 +34,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
 
         private void Awake()
         {
-            if (ReplacementData == null)
-            {
-                ReplacementData = TryToFindAsset<KeywordReplacementCollection>("KeywordReplacements");
-            }
             if (scriptTemplateDatas == null || scriptTemplateDatas.Count <= 0)
             {
                 scriptTemplateDatas = new List<ScriptTemplateData>
@@ -67,18 +62,6 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
                 }
             }
             return null;
-        }
-
-        public KeywordReplacementCollection ReplacementData
-        {
-            get
-            {
-                return this.replacementData;
-            }
-            set
-            {
-                this.replacementData = value;
-            }
         }
 
         private List<string> GenerateIgnoredFolders()
@@ -201,14 +184,14 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             else return customScriptableObjectName;
         }
 
-        private bool PathIsPackage(string path)
+        private bool IsPathPackage(string path)
         {
             return path.Contains("com.");
         }
 
         public string GetProjectName(string path)
         {
-            if (PathIsPackage(path))
+            if (IsPathPackage(path))
             {
                 string packageName = GetPackageName(path);
                 PackageInfo packageInfo = GetPackageInfo(packageName);

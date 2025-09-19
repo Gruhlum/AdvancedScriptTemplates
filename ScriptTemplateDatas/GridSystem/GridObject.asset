@@ -10,41 +10,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0efa6cdfbd7e154db4047def0fa3168, type: 3}
-  m_Name: Display
+  m_Name: GridObject
   m_EditorClassIdentifier: 
-  menuItemName: Display
-  newFileName: Display
+  menuItemName: GridObject
+  newFileName: GridObject
   suffix: 
   priority: 15
-  template: {fileID: 4900000, guid: abb54a95190f899478df544b2aa5c645, type: 3}
+  template: {fileID: 4900000, guid: ac4a02b682b72c8438b32ca34c0af51a, type: 3}
   keywordReplacements:
     keywordReplacements:
     - keyword: '#SCRIPT_NAME#'
       replacementFunction:
-        rid: 8711169386283794456
-    - keyword: '#SCRIPT_NAME_WITHOUT_DISPLAY#'
+        rid: 8711169386283794462
+    - keyword: '#SCRIPT_NAME_DATA#'
       replacementFunction:
-        rid: 8711169386283794459
-    - keyword: '#SCRIPT_NAME_WITHOUT_DISPLAY_TO_LOWER#'
+        rid: 8711169386283794466
+    - keyword: '#SCRIPT_NAME_VISUAL#'
       replacementFunction:
-        rid: 8711169386283794458
+        rid: 8711169386283794477
   otherItems:
-  - {fileID: 11400000, guid: d1025aba5dd61f248859423b5b53f3ce, type: 2}
+  - {fileID: 11400000, guid: 31c374beb5a6b5d4f906a62dab0b83bb, type: 2}
+  - {fileID: 11400000, guid: 9ac3cd8223b7d2d4caa9045a98f25093, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 8711169386283794456
+    - rid: 8711169386283794462
       type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
       data:
         additionalRemoval: 
+        suffix: 
         toLower: 0
-    - rid: 8711169386283794458
+    - rid: 8711169386283794466
       type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
       data:
-        additionalRemoval: Display
-        toLower: 1
-    - rid: 8711169386283794459
+        additionalRemoval: 
+        suffix: Data
+        toLower: 0
+    - rid: 8711169386283794477
       type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
       data:
-        additionalRemoval: Display
+        additionalRemoval: 
+        suffix: Visual
         toLower: 0

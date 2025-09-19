@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0efa6cdfbd7e154db4047def0fa3168, type: 3}
+  m_Name: GridData
+  m_EditorClassIdentifier: 
+  menuItemName: GridData
+  newFileName: GridData
+  suffix: Data
+  priority: 15
+  template: {fileID: 4900000, guid: 3e6ae55e3d0910f4fa13247f63cf3f46, type: 3}
+  keywordReplacements:
+    keywordReplacements:
+    - keyword: '#SCRIPT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794446
+    - keyword: '#SCRIPT_NAME_NO_DATA#'
+      replacementFunction:
+        rid: 8711169386283794478
+    - keyword: '#SCRIPT_NAME_VISUAL_NO_DATA#'
+      replacementFunction:
+        rid: 8711169386283794479
+    - keyword: '#SCRIPT_NAME_VISUAL_NO_DATA#'
+      replacementFunction:
+        rid: 8711169386283794479
+    - keyword: '#SCRIPTABLE_OBJECT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794480
+    - keyword: '#PROJECT_NAME#'
+      replacementFunction:
+        rid: 8711169386283794481
+  otherItems: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8711169386283794446
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: 
+        suffix: 
+        toLower: 0
+    - rid: 8711169386283794478
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: Data
+        suffix: 
+        toLower: 0
+    - rid: 8711169386283794479
+      type: {class: ScriptNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data:
+        additionalRemoval: Data
+        suffix: Visual
+        toLower: 0
+    - rid: 8711169386283794480
+      type: {class: ScriptableObjectNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data: 
+    - rid: 8711169386283794481
+      type: {class: ProjectNameReplacement, ns: HexTecGames.AdvancedScriptTemplates.Editor, asm: HexTecGames.AdvancedScriptTemplates.Editor}
+      data: 

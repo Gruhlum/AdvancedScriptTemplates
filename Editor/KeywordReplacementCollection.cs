@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
-    [CreateAssetMenu(menuName = "HexTecGames/AdvancedScriptTemplates/KeywordReplacementCollection")]
-    public class KeywordReplacementCollection : ScriptableObject, IEnumerable<KeywordReplacement>
+    [System.Serializable]
+    public class KeywordReplacementCollection : IEnumerable<KeywordReplacement>
     {
-        public List<KeywordReplacement> keywordReplacements;
-
+        public List<KeywordReplacement> keywordReplacements = new List<KeywordReplacement>() { new KeywordReplacement("#SCRIPT_NAME#") };
 
         public IEnumerator<KeywordReplacement> GetEnumerator()
         {

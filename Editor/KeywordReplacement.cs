@@ -20,6 +20,16 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
         }
 
+        public KeywordReplacement()
+        {
+        }
+        public KeywordReplacement(string keyword)
+        {
+            this.keyword = keyword;
+            replacementFunction = new ScriptNameReplacement();
+        }
+
+
         public string GetReplacement(string scriptName)
         {
             if (replacementFunction == null)

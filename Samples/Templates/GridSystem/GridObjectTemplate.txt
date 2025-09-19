@@ -1,0 +1,14 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using HexTecGames.Basics;
+using HexTecGames.GridBaseSystem;
+using UnityEngine;
+
+#NAMESPACE#
+[System.Serializable]
+public class #SCRIPT_NAME# : SingleObject<#SCRIPT_NAME#, #SCRIPT_NAME_DATA#, #SCRIPT_NAME_VISUAL#>
+{
+        public #SCRIPT_NAME#(#SCRIPT_NAME_DATA# data, Coord center, int rotation = 0, GridObjectSaveData saveData = null) : base(data, center, rotation, saveData)
+        {
+        }
+}

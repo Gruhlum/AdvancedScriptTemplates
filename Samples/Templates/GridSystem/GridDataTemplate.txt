@@ -1,0 +1,11 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using HexTecGames.GridBaseSystem;
+using UnityEngine;
+
+#NAMESPACE#
+[CreateAssetMenu(menuName = "#SCRIPTABLE_OBJECT_NAME#/#PROJECT_NAME#/#SCRIPT_NAME#")]
+public class #SCRIPT_NAME# : SingleObjectData<#SCRIPT_NAME_NO_DATA#, #SCRIPT_NAME#, #SCRIPT_NAME_VISUAL_NO_DATA#>
+{
+    
+}
