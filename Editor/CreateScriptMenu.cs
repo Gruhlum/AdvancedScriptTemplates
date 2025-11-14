@@ -263,14 +263,22 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             }
 
             string nameSpace = TemplateSettings.instance.GenerateNamespaceName(path);
-
             text = text.Replace("#NAMESPACE#", $"namespace {nameSpace}{Environment.NewLine}{{");
 
             int openBraceIndex = text.IndexOf('{') + 1;
-
             string innerContent = text.Substring(openBraceIndex);
-            string indentedContent = "    " + innerContent.Replace(Environment.NewLine, Environment.NewLine + "    ");
 
+            // Split into lines and indent each one
+            string[] lines = innerContent.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                // Only indent non-empty lines
+                lines[i] = lines[i].Length > 0 ? "    " + lines[i] : lines[i];
+            }
+
+            string indentedContent = string.Join(Environment.NewLine, lines);
+
+            // Reconstruct the full text with closing brace
             string result = text.Substring(0, openBraceIndex) + indentedContent + Environment.NewLine + "}";
 
             return result;
