@@ -3,20 +3,37 @@ using UnityEngine;
 
 namespace HexTecGames.AdvancedScriptTemplates.Editor
 {
-    public class FolderSelector
+    public static class FolderSelector
     {
-        [SerializeField] private static Texture texture = default;
+        private static Texture Texture
+        {
+            get
+            {
+                if (texture == null)
+                {
+                    texture = AssetDatabase.LoadAssetAtPath<Texture>(IconPath);
+                }
+                return texture;
+            }
+        }
+        private static Texture texture = default;
 
+        private const string IconPath = "Packages/com.hextecgames.advancedscripttemplates/Icons/Folder_Normal.png";
 
         [InitializeOnLoadMethod]
         private static void Start()
         {
+            EditorApplication.projectWindowItemOnGUI -= DrawFolderIcon;
             EditorApplication.projectWindowItemOnGUI += DrawFolderIcon;
         }
 
         [MenuItem("Tools/AdvancedScriptTemplates/Toggle Folder %n")]
         private static void ToggleFolder()
         {
+            if (Selection.activeObject == null)
+            {
+                return;
+            }
             string path = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (!AssetDatabase.IsValidFolder(path))
             {
@@ -46,31 +63,30 @@ namespace HexTecGames.AdvancedScriptTemplates.Editor
             {
                 return;
             }
-            if (TemplateSettings.instance.selectedPaths != null && !TemplateSettings.instance.selectedPaths.Contains(path))
+            var settings = TemplateSettings.instance;
+            if (settings.selectedPaths != null && !settings.selectedPaths.Contains(path))
             {
                 return;
             }
-            Rect imageRect;
+            Rect imageRect = GetIconRect(rect);
 
+            GUI.DrawTexture(imageRect, Texture);
+        }
+
+        private static Rect GetIconRect(Rect rect)
+        {
             if (rect.height > 20)
             {
-                imageRect = new Rect(rect.x, rect.y, rect.width, rect.width);
-            }
-            else if (rect.x > 20)
-            {
-                imageRect = new Rect(rect.x, rect.y, rect.height, rect.height);
-            }
-            else
-            {
-                imageRect = new Rect(rect.x + 3, rect.y, rect.height, rect.height);
+                return new Rect(rect.x, rect.y, rect.width, rect.width);
             }
 
-            if (texture == null)
+            if (rect.x > 20)
             {
-                string assetPath = "Packages/com.hextecgames.advancedscripttemplates/Icons/Folder_Normal.png";
-                texture = AssetDatabase.LoadAssetAtPath<Texture>(assetPath);
+                return new Rect(rect.x, rect.y, rect.height, rect.height);
             }
-            GUI.DrawTexture(imageRect, texture);
+
+            return new Rect(rect.x + 3, rect.y, rect.height, rect.height);
         }
+
     }
 }
